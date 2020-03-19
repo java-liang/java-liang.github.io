@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://java-liang.gitee.io/"/>
-  <updated>2020-03-19T06:58:48.649Z</updated>
+  <updated>2020-03-19T10:02:04.148Z</updated>
   <id>http://java-liang.gitee.io/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>$title</title>
+    <link href="http://java-liang.gitee.io/2020/03/19/title/"/>
+    <id>http://java-liang.gitee.io/2020/03/19/title/</id>
+    <published>2020-03-19T09:55:53.000Z</published>
+    <updated>2020-03-19T10:02:04.148Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h4 id=&quot;js中-和-区别&quot;&gt;&lt;a href=&quot;#js中-和-区别&quot; class=&quot;headerlink&quot; title=&quot;js中==和===区别&quot;&gt;&lt;/a&gt;js中==和===区别&lt;/h4&gt;&lt;hr&gt;
+&lt;p&gt;简单来说： == 代表相同， ===代表严格相同, 为啥这么说呢，
+        
+      
+    
+    </summary>
+    
+    
+      <category term="前端" scheme="http://java-liang.gitee.io/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+    
+      <category term="js" scheme="http://java-liang.gitee.io/tags/js/"/>
+    
+  </entry>
   
   <entry>
     <title>Spring Boot</title>
