@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>http://java-liang.gitee.io/2020/03/19/%E6%B5%8B%E8%AF%95/</loc>
+    <loc>http://java-liang.gitee.io/2020/03/18/hello-world/</loc>
     <lastmod>2020-03-19</lastmod>
   </url>  <url>
-    <loc>http://java-liang.gitee.io/2020/03/18/hello-world/</loc>
-    <lastmod>2020-03-18</lastmod>
+    <loc>http://java-liang.gitee.io/2020/03/19/Spring%20Boot/</loc>
+    <lastmod>2020-03-19</lastmod>
+  </url>  <url>
+    <loc>http://java-liang.gitee.io/2020/03/19/%E6%B5%8B%E8%AF%95/</loc>
+    <lastmod>2020-03-19</lastmod>
   </url>
 </urlset>
