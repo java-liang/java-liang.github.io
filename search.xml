@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>$title</title>
+    <title>js中==和===区别</title>
     <url>/2020/03/19/title/</url>
     <content><![CDATA[<h4 id="js中-和-区别"><a href="#js中-和-区别" class="headerlink" title="js中==和===区别"></a>js中==和===区别</h4><hr>
 <p>简单来说： == 代表相同， ===代表严格相同, 为啥这么说呢， </p>
