@@ -6,7 +6,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    Tag: js |  WKL博客
+    com.mysql.jdbc.Driver 和 com.mysql.cj.jdbc.Driver |  WKL博客
   </title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   
@@ -31,55 +31,248 @@
   <div id="app">
     <main class="content">
       <section class="outer">
-  <article class="articles">
+  <article id="post-mysql相关" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
     
-    
-    <h1 class="page-type-title">#&nbspjs</h1>
-    
-    
-  
-  
-  
-  
-  
-  
-  <div class="archives-wrap">
-    <div class="archive-year-wrap">
-      <a href="/archives/2020" class="archive-year">2020</a>
-    </div>
-    <div class="archives">
-      
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/03/19/js%E4%B8%AD==%E5%92%8C===%E5%8C%BA%E5%88%AB/" class="archive-article-date">
-  <time datetime="2020-03-19T09:55:53.000Z" itemprop="datePublished">03/19</time>
-</a>
+    <header class="article-header">
        
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2020/03/19/js%E4%B8%AD==%E5%92%8C===%E5%8C%BA%E5%88%AB/"
-    >js中==和===区别</a
-  >
-</h2>
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  com.mysql.jdbc.Driver 和 com.mysql.cj.jdbc.Driver
+</h1>
   
 
     </header>
     
-    
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/js/" rel="tag">js</a></li></ul>
 
     
-  </div>
-</article>
+    <div class="article-meta">
+      <a href="/2020/03/20/mysql%E7%9B%B8%E5%85%B3/" class="article-date">
+  <time datetime="2020-03-20T08:43:37.000Z" itemprop="datePublished">2020-03-20</time>
+</a>
       
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+  </div>
+
+      
+      
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">559字</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">2分钟</span>
+        </span>
+    </span>
+</div>
+
       
     </div>
+    
+
+    
+    
+
+
+
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <p>####com.mysql.jdbc.Driver 是 mysql-connector-java 5中的， <br><br>####com.mysql.cj.jdbc.Driver 是 mysql-connector-java 6中的</p>
+<p>##1、JDBC连接Mysql5 com.mysql.jdbc.Driver:</p>
+<pre><code>driverClassName=com.mysql.jdbc.Driver
+url=jdbc:mysql://localhost:3306/test?useUnicode=true&amp;characterEncoding=utf8&amp;useSSL=false
+username=root
+password=</code></pre><p>##2、JDBC连接Mysql6 com.mysql.cj.jdbc.Driver， 需要指定时区serverTimezone:</p>
+<pre><code>driverClassName=com.mysql.cj.jdbc.Driver
+url=jdbc:mysql://localhost:3306/test?serverTimezone=UTC&amp;?useUnicode=true&amp;characterEncoding=utf8&amp;useSSL=false
+username=root
+password=</code></pre><p>在设定时区的时候，如果设定serverTimezone=UTC，会比中国时间早8个小时，如果在中国，可以选择Asia/Shanghai或者Asia/Hongkong，例如：</p>
+<pre><code>driverClassName=com.mysql.cj.jdbc.Driver
+url=jdbc:mysql://localhost:3306/test?serverTimezone=Shanghai&amp;?useUnicode=true&amp;characterEncoding=utf8&amp;useSSL=false
+username=root
+password=</code></pre><p>备注：</p>
+<p>I、如果mysql-connector-java用的6.0以上的，如下：</p>
+<pre><code>&lt;!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;mysql&lt;/groupId&gt;
+    &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+    &lt;version&gt;6.0.6&lt;/version&gt;
+&lt;/dependency&gt;</code></pre><p>但是你的driver用的还是com.mysql.jdbc.Driver，就会报错：</p>
+<pre><code>Loading class &apos;com.mysql.jdbc.Driver&apos;. This is deprecated. The new 
+driver class is &apos;com.mysql.cj.jdbc.Driver&apos;. 
+The driver is automatically registered via the SPI 
+and manual loading of the driver class is generally unnecessary.</code></pre><p>此时需要把com.mysql.jdbc.Driver 改为com.mysql.cj.jdbc.Driver</p>
+<p>II、还有一个警告：</p>
+<pre><code>WARN: Establishing SSL connection without server’s identity verification is not recommended. 
+According to MySQL 5.5.45+, 5.6.26+ and 5.7.6+ requirements SSL connection 
+must be established by default if explicit option isn’t set. 
+For compliance with existing applications not using SSL the verifyServerCertificate property is set to ‘false’. 
+You need either to explicitly disable SSL by setting useSSL=false, 
+or set useSSL=true and provide truststore for server certificate verification.</code></pre><p>不推荐不使用服务器身份验证来建立SSL连接。<br>如果未明确设置，MySQL 5.5.45+, 5.6.26+ and 5.7.6+版本默认要求建立SSL连接。<br>为了符合当前不使用SSL连接的应用程序，verifyServerCertificate属性设置为’false’。<br>如果你不需要使用SSL连接，你需要通过设置useSSL=false来显式禁用SSL连接。<br>如果你需要用SSL连接，就要为服务器证书验证提供信任库，并设置useSSL=true。</p>
+<p>SSL – Secure Sockets Layer（安全套接层）</p>
+<p>可以选择东8区的Hongkong、Asia/Shanghai或者Asia/Hongkong作为参数，修改后url为</p>
+<pre><code>jdbc:mysql://172.xx.xx.xx:3306/test?useUnicode=true&amp;characterEncoding=gbk&amp;useSSL=true
+
+&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=Hongkong  </code></pre>
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+          
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://java-liang.gitee.io/2020/03/20/mysql%E7%9B%B8%E5%85%B3/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mysql/" rel="tag">mysql</a></li></ul>
+
+
+    </footer>
+
   </div>
+
   
+  
+  <nav class="article-nav">
+    
+    
+      <a href="/2020/03/19/js%E4%B8%AD==%E5%92%8C===%E5%8C%BA%E5%88%AB/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">js中==和===区别</div>
+      </a>
+    
+  </nav>
+
+
   
 
   
+  
+<!-- valine评论 -->
+<div id="vcomments-box">
+    <div id="vcomments">
+    </div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/valine@1.3.10/dist/Valine.min.js'></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        app_id: 'lbLHmVLUWt02BWTQJCysyrHE-gzGzoHsz',
+        app_key: 'nOx5wLWtemsOw8OPMiq3KGQ9',
+        path: window.location.pathname,
+        notify: 'false',
+        verify: 'false',
+        avatar: 'mp',
+        placeholder: '给我的文章加点评论吧~',
+        recordIP: true
+    });
+    const infoEle = document.querySelector('#vcomments .info');
+    if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+        infoEle.childNodes.forEach(function (item) {
+            item.parentNode.removeChild(item);
+        });
+    }
+</script>
+<style>
+    #vcomments-box {
+        padding: 5px 30px;
+    }
+
+    @media screen and (max-width: 800px) {
+        #vcomments-box {
+            padding: 5px 0px;
+        }
+    }
+
+    #vcomments-box #vcomments {
+        background-color: #fff;
+    }
+
+    .v .vlist .vcard .vh {
+        padding-right: 20px;
+    }
+
+    .v .vlist .vcard {
+        padding-left: 10px;
+    }
+</style>
+
+  
+
+  
+  
+  
+
+</article>
 </section>
       <footer class="footer">
   <div class="outer">
@@ -230,6 +423,30 @@
 </script>
 
 
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto',
+    onClick: (e) => {
+      $('.toc-link').removeClass('is-active-link');
+      $(`a[href=${e.target.hash}]`).addClass('is-active-link');
+      $(e.target.hash).scrollIntoView();
+      return false;
+    }
+  });
+</script>
 
 
 
