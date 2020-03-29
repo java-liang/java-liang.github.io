@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://java-liang.gitee.io/"/>
-  <updated>2020-03-29T03:59:02.577Z</updated>
+  <updated>2020-03-29T04:01:35.427Z</updated>
   <id>http://java-liang.gitee.io/</id>
   
   <author>
@@ -20,8 +20,8 @@
     <title>强、软、弱、虚引用详解</title>
     <link href="http://java-liang.gitee.io/2020/03/29/%E5%BC%BA%E3%80%81%E8%BD%AF%E3%80%81%E5%BC%B1%E3%80%81%E8%99%9A%E5%BC%95%E7%94%A8%E8%AF%A6%E8%A7%A3/"/>
     <id>http://java-liang.gitee.io/2020/03/29/%E5%BC%BA%E3%80%81%E8%BD%AF%E3%80%81%E5%BC%B1%E3%80%81%E8%99%9A%E5%BC%95%E7%94%A8%E8%AF%A6%E8%A7%A3/</id>
-    <published>2020-03-29T02:41:05.779Z</published>
-    <updated>2020-03-29T03:59:02.577Z</updated>
+    <published>2020-03-29T04:01:56.000Z</published>
+    <updated>2020-03-29T04:01:35.427Z</updated>
     
     <summary type="html">
     
@@ -36,6 +36,10 @@
     </summary>
     
     
+      <category term="技术" scheme="http://java-liang.gitee.io/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+    
+      <category term="JVM" scheme="http://java-liang.gitee.io/tags/JVM/"/>
     
   </entry>
   
