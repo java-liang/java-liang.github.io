@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://java-liang.gitee.io/"/>
-  <updated>2020-03-20T08:58:25.490Z</updated>
+  <updated>2020-03-29T01:46:32.118Z</updated>
   <id>http://java-liang.gitee.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>JVM</title>
+    <link href="http://java-liang.gitee.io/2020/03/29/JVM/"/>
+    <id>http://java-liang.gitee.io/2020/03/29/JVM/</id>
+    <published>2020-03-29T01:47:30.967Z</published>
+    <updated>2020-03-29T01:46:32.118Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;JVM&quot;&gt;&lt;a href=&quot;#JVM&quot; class=&quot;headerlink&quot; title=&quot;JVM&quot;&gt;&lt;/a&gt;JVM&lt;/h2&gt;&lt;h4 id=&quot;JM如何确定垃圾-什么是-GC-Roots&quot;&gt;&lt;a href=&quot;#JM如何确定垃圾-什么是-GC-Roots&quot;
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
   
   <entry>
     <title>com.mysql.jdbc.Driver 和 com.mysql.cj.jdbc.Driver</title>

@@ -6,7 +6,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    com.mysql.jdbc.Driver 和 com.mysql.cj.jdbc.Driver |  WKL博客
+    JVM |  WKL博客
   </title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   
@@ -31,7 +31,7 @@
   <div id="app">
     <main class="content">
       <section class="outer">
-  <article id="post-mysql相关" class="article article-type-post" itemscope
+  <article id="post-JVM" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
   <div class="article-inner">
@@ -39,7 +39,7 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  com.mysql.jdbc.Driver 和 com.mysql.cj.jdbc.Driver
+  JVM
 </h1>
   
 
@@ -48,14 +48,10 @@
 
     
     <div class="article-meta">
-      <a href="/2020/03/20/mysql%E7%9B%B8%E5%85%B3/" class="article-date">
-  <time datetime="2020-03-20T08:43:37.000Z" itemprop="datePublished">2020-03-20</time>
+      <a href="/2020/03/29/JVM/" class="article-date">
+  <time datetime="2020-03-29T01:47:30.967Z" itemprop="datePublished">2020-03-29</time>
 </a>
       
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
-  </div>
-
       
       
 <div class="word_count">
@@ -63,7 +59,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">559字</span>
+            <span class="post-count">726字</span>
         </span>
     </span>
 
@@ -83,6 +79,8 @@
 
     
     
+    <div class="tocbot"></div>
+
 
 
 
@@ -95,43 +93,44 @@
       
 
       
-      <p>####com.mysql.jdbc.Driver 是 mysql-connector-java 5中的， <br><br>####com.mysql.cj.jdbc.Driver 是 mysql-connector-java 6中的</p>
-<p>##1、JDBC连接Mysql5 com.mysql.jdbc.Driver:</p>
-<pre><code>driverClassName=com.mysql.jdbc.Driver
-url=jdbc:mysql://localhost:3306/test?useUnicode=true&amp;characterEncoding=utf8&amp;useSSL=false
-username=root
-password=</code></pre><p>##2、JDBC连接Mysql6 com.mysql.cj.jdbc.Driver， 需要指定时区serverTimezone:</p>
-<pre><code>driverClassName=com.mysql.cj.jdbc.Driver
-url=jdbc:mysql://localhost:3306/test?serverTimezone=UTC&amp;?useUnicode=true&amp;characterEncoding=utf8&amp;useSSL=false
-username=root
-password=</code></pre><p>在设定时区的时候，如果设定serverTimezone=UTC，会比中国时间早8个小时，如果在中国，可以选择Asia/Shanghai或者Asia/Hongkong，例如：</p>
-<pre><code>driverClassName=com.mysql.cj.jdbc.Driver
-url=jdbc:mysql://localhost:3306/test?serverTimezone=Shanghai&amp;?useUnicode=true&amp;characterEncoding=utf8&amp;useSSL=false
-username=root
-password=</code></pre><p>备注：</p>
-<p>I、如果mysql-connector-java用的6.0以上的，如下：</p>
-<pre><code>&lt;!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java --&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;mysql&lt;/groupId&gt;
-    &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
-    &lt;version&gt;6.0.6&lt;/version&gt;
-&lt;/dependency&gt;</code></pre><p>但是你的driver用的还是com.mysql.jdbc.Driver，就会报错：</p>
-<pre><code>Loading class &apos;com.mysql.jdbc.Driver&apos;. This is deprecated. The new 
-driver class is &apos;com.mysql.cj.jdbc.Driver&apos;. 
-The driver is automatically registered via the SPI 
-and manual loading of the driver class is generally unnecessary.</code></pre><p>此时需要把com.mysql.jdbc.Driver 改为com.mysql.cj.jdbc.Driver</p>
-<p>II、还有一个警告：</p>
-<pre><code>WARN: Establishing SSL connection without server’s identity verification is not recommended. 
-According to MySQL 5.5.45+, 5.6.26+ and 5.7.6+ requirements SSL connection 
-must be established by default if explicit option isn’t set. 
-For compliance with existing applications not using SSL the verifyServerCertificate property is set to ‘false’. 
-You need either to explicitly disable SSL by setting useSSL=false, 
-or set useSSL=true and provide truststore for server certificate verification.</code></pre><p>不推荐不使用服务器身份验证来建立SSL连接。<br>如果未明确设置，MySQL 5.5.45+, 5.6.26+ and 5.7.6+版本默认要求建立SSL连接。<br>为了符合当前不使用SSL连接的应用程序，verifyServerCertificate属性设置为’false’。<br>如果你不需要使用SSL连接，你需要通过设置useSSL=false来显式禁用SSL连接。<br>如果你需要用SSL连接，就要为服务器证书验证提供信任库，并设置useSSL=true。</p>
-<p>SSL – Secure Sockets Layer（安全套接层）</p>
-<p>可以选择东8区的Hongkong、Asia/Shanghai或者Asia/Hongkong作为参数，修改后url为</p>
-<pre><code>jdbc:mysql://172.xx.xx.xx:3306/test?useUnicode=true&amp;characterEncoding=gbk&amp;useSSL=true
+      <h2 id="JVM"><a href="#JVM" class="headerlink" title="JVM"></a>JVM</h2><h4 id="JM如何确定垃圾-什么是-GC-Roots"><a href="#JM如何确定垃圾-什么是-GC-Roots" class="headerlink" title="JM如何确定垃圾?什么是 GC Roots"></a>JM如何确定垃圾?什么是 GC Roots</h4><h5 id="1-什么是垃圾"><a href="#1-什么是垃圾" class="headerlink" title="1.什么是垃圾"></a>1.什么是垃圾</h5><p>简单的说就是内存中已经不再被使用到的空间就是垃圾</p>
+<h5 id="2-要进行垃圾回收，如何判断一个对象是否可以被回收"><a href="#2-要进行垃圾回收，如何判断一个对象是否可以被回收" class="headerlink" title="2.要进行垃圾回收，如何判断一个对象是否可以被回收"></a>2.要进行垃圾回收，如何判断一个对象是否可以被回收</h5><h6 id="2-1-引用计数法"><a href="#2-1-引用计数法" class="headerlink" title="2.1.引用计数法"></a>2.1.引用计数法</h6><p>Java中,引用和对象是有关联的。如果要操作对象则必须用引用进行<br>因此,很显然一个简单的办法是通过引用计数来判断一个对象是否可以回收。简单说,给对象中添加一个引用计数器,<br>每当有一个地方引用它,计数器值加1<br>每当有一个引用失效时,计数器值减1。<br>任何时刻计数器值为零的对象就是不可能再被使用的,那么这个对象就是可回收对象<br>那为什么主流的Java虚拟机里面都没有选用这种算法呢?其中最主要的原因是它很难解决对象之间相互循环引用的问题</p>
+<p><img src="assets/1585286547400.png" alt=""></p>
+<h6 id="2-2-枚举根节点做可达性分析（根搜索路径）"><a href="#2-2-枚举根节点做可达性分析（根搜索路径）" class="headerlink" title="2.2. 枚举根节点做可达性分析（根搜索路径）"></a>2.2. 枚举根节点做可达性分析（根搜索路径）</h6><p><img src="assets/1585286620894.png" alt=""></p>
+<p>2.2.1 从GCroot开始为引用可达对象</p>
+<p><img src="assets%5C1585286822260.png" alt=""></p>
+<p>2.2.2 Java 可以做GCRoots的对象</p>
+<p>​    1）虚拟机栈（栈帧中的局部引用变量区，也叫局部变量区）中引用的对象。</p>
+<p>​    2）方法区的静态属性引用的对象</p>
+<p>​    3）本地方法区的引用的对象</p>
+<p>​    4）本地方法中JNI（native方法）引用的对象</p>
+<h5 id="3-查看JVM系统默认值"><a href="#3-查看JVM系统默认值" class="headerlink" title="3.查看JVM系统默认值"></a>3.查看JVM系统默认值</h5><h6 id="3-1参数类型"><a href="#3-1参数类型" class="headerlink" title="3.1参数类型"></a>3.1参数类型</h6><p>3.1.1标配参数</p>
+<p>-version<br>-help<br>java -showversion</p>
+<p>3.1.2X参数</p>
+<p>-Xint: 解释执行<br>-Xcomp: 第一次使用就编译本地代码<br>-Xmixed: 混合模式</p>
+<p>3.1.3 XX参(重要)</p>
+<p>3.1.3.1 布尔类型</p>
+<p>​    -XX：+或-某个属性值；+表示开启，-表示关<br><img src="assets/1585289248860.png" alt="1585289248860"></p>
+<p>扩展：<font color=red >-Xms: 等价于 -XX:InitialHeapSize<br>          -Xmx: 等价于-XX:MaxHeapSize</font></p>
+<p>3.1.3.2 KV设值类型</p>
+<p><em>-XX：属性key=属性值value</em><br>eg:-XX:MetaspaceSize=128m</p>
+<h6 id="3-2-查看JVM默认值"><a href="#3-2-查看JVM默认值" class="headerlink" title="3.2.查看JVM默认值"></a>3.2.查看JVM默认值</h6><p>​    3.2.1 Jinfo查看当前运行程序的配置<br>    公式：<font color=red > jinfo -flag 配置项 进程编号;<br>                 jinfo -flags  进程编号; (查看当前所有jvm配置)</font></p>
+<p>​    3.2.2  java  -XX:+PrintFlagsInitial -version (初始状态)</p>
+<p>​    3.2.3 java -XX:+PrintFlagsFinal -version (主要查看修改更新)</p>
+<p><img src="assets/1585291868081.png" alt="1585291868081"><br>= 为默认记载的值    := JVM或者人为修改过的值</p>
+<p><img src="assets/1585292371450.png" alt="1585292371450"></p>
+<p>3.2.4 java -XX:+PrintCommandLineFlags -version</p>
+<p><img src="assets/1585292491862.png" alt="1585292491862"></p>
+<h5 id="4-JVM常用配置"><a href="#4-JVM常用配置" class="headerlink" title="4.JVM常用配置"></a>4.JVM常用配置</h5><p><img src="assets/1585293444976.png" alt="1585293444976"></p>
+<p>-Xms: 初始大小内存，默认为物理内存1/64; 等价于-XX:InitialHeapSize<br>-Xmx: 最大分配内存，默认为物理内存1/4; 等价于-XX:MaxHeapSize<br>-Xss: 设置单个线程的栈空间大小，一般默认为512K~1024K; 等价于-XX:ThreadStackSize<br><img src="assets/1585295513616.png" alt="1585295513616">按照系统进行分配<br>-Xmn: 设置年轻代大小<br>-XX:MetaspaceSize : 设置元空间大小; eg:-Xms10m -Xmx10m -XX:MetaspaceSize=1024m -XX:+PrintFlagsFinal<br>-XX:+PrintGCDetails : </p>
+<p>​    GC:<img src="assets/1585445018451.png" alt="1585445018451"></p>
+<p>​    fullGC:<img src="assets/1585445066746.png" alt="1585445066746"></p>
+<p><img src="assets/1585445357949.png" alt="1585445357949"></p>
+<p>-XX:SurvivoRatio: <img src="assets/1585445552716.png" alt="1585445552716"></p>
+<p>-XX:NewRatio: <img src="assets/1585445839383.png" alt="1585445839383"></p>
+<p><img src="assets/1585445955074.png" alt="1585445955074"></p>
+<p>-XX:MaxTenuringThreshold: 设置垃圾最大年龄。默认为15, 值必须在0到15之间<br><img src="assets/1585446095806.png" alt="1585446095806"></p>
 
-&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=Hongkong  </code></pre>
       
       <!-- reward -->
       
@@ -185,15 +184,13 @@ or set useSSL=true and provide truststore for server certificate verification.</
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://java-liang.gitee.io/2020/03/20/mysql%E7%9B%B8%E5%85%B3/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://java-liang.gitee.io/2020/03/29/JVM/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mysql/" rel="tag">mysql</a></li></ul>
-
 
     </footer>
 
@@ -203,19 +200,10 @@ or set useSSL=true and provide truststore for server certificate verification.</
   
   <nav class="article-nav">
     
-      <a href="/2020/03/29/JVM/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            JVM
-          
-        </div>
-      </a>
     
-    
-      <a href="/2020/03/19/js%E4%B8%AD==%E5%92%8C===%E5%8C%BA%E5%88%AB/" class="article-nav-link">
+      <a href="/2020/03/20/mysql%E7%9B%B8%E5%85%B3/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">js中==和===区别</div>
+        <div class="article-nav-title">com.mysql.jdbc.Driver 和 com.mysql.cj.jdbc.Driver</div>
       </a>
     
   </nav>

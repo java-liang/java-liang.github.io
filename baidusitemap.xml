@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://java-liang.gitee.io/2020/03/29/JVM/</loc>
+    <lastmod>2020-03-29</lastmod>
+  </url>  <url>
     <loc>http://java-liang.gitee.io/2020/03/20/mysql%E7%9B%B8%E5%85%B3/</loc>
     <lastmod>2020-03-20</lastmod>
   </url>  <url>

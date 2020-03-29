@@ -1,6 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>JVM</title>
+    <url>/2020/03/29/JVM/</url>
+    <content><![CDATA[<h2 id="JVM"><a href="#JVM" class="headerlink" title="JVM"></a>JVM</h2><h4 id="JM如何确定垃圾-什么是-GC-Roots"><a href="#JM如何确定垃圾-什么是-GC-Roots" class="headerlink" title="JM如何确定垃圾?什么是 GC Roots"></a>JM如何确定垃圾?什么是 GC Roots</h4><h5 id="1-什么是垃圾"><a href="#1-什么是垃圾" class="headerlink" title="1.什么是垃圾"></a>1.什么是垃圾</h5><p>简单的说就是内存中已经不再被使用到的空间就是垃圾</p>
+<h5 id="2-要进行垃圾回收，如何判断一个对象是否可以被回收"><a href="#2-要进行垃圾回收，如何判断一个对象是否可以被回收" class="headerlink" title="2.要进行垃圾回收，如何判断一个对象是否可以被回收"></a>2.要进行垃圾回收，如何判断一个对象是否可以被回收</h5><h6 id="2-1-引用计数法"><a href="#2-1-引用计数法" class="headerlink" title="2.1.引用计数法"></a>2.1.引用计数法</h6><p>Java中,引用和对象是有关联的。如果要操作对象则必须用引用进行<br>因此,很显然一个简单的办法是通过引用计数来判断一个对象是否可以回收。简单说,给对象中添加一个引用计数器,<br>每当有一个地方引用它,计数器值加1<br>每当有一个引用失效时,计数器值减1。<br>任何时刻计数器值为零的对象就是不可能再被使用的,那么这个对象就是可回收对象<br>那为什么主流的Java虚拟机里面都没有选用这种算法呢?其中最主要的原因是它很难解决对象之间相互循环引用的问题</p>
+<p><img src="assets/1585286547400.png" alt=""></p>
+<h6 id="2-2-枚举根节点做可达性分析（根搜索路径）"><a href="#2-2-枚举根节点做可达性分析（根搜索路径）" class="headerlink" title="2.2. 枚举根节点做可达性分析（根搜索路径）"></a>2.2. 枚举根节点做可达性分析（根搜索路径）</h6><p><img src="assets/1585286620894.png" alt=""></p>
+<p>2.2.1 从GCroot开始为引用可达对象</p>
+<p><img src="assets%5C1585286822260.png" alt=""></p>
+<p>2.2.2 Java 可以做GCRoots的对象</p>
+<p>​    1）虚拟机栈（栈帧中的局部引用变量区，也叫局部变量区）中引用的对象。</p>
+<p>​    2）方法区的静态属性引用的对象</p>
+<p>​    3）本地方法区的引用的对象</p>
+<p>​    4）本地方法中JNI（native方法）引用的对象</p>
+<h5 id="3-查看JVM系统默认值"><a href="#3-查看JVM系统默认值" class="headerlink" title="3.查看JVM系统默认值"></a>3.查看JVM系统默认值</h5><h6 id="3-1参数类型"><a href="#3-1参数类型" class="headerlink" title="3.1参数类型"></a>3.1参数类型</h6><p>3.1.1标配参数</p>
+<p>-version<br>-help<br>java -showversion</p>
+<p>3.1.2X参数</p>
+<p>-Xint: 解释执行<br>-Xcomp: 第一次使用就编译本地代码<br>-Xmixed: 混合模式</p>
+<p>3.1.3 XX参(重要)</p>
+<p>3.1.3.1 布尔类型</p>
+<p>​    -XX：+或-某个属性值；+表示开启，-表示关<br><img src="assets/1585289248860.png" alt="1585289248860"></p>
+<p>扩展：<font color=red >-Xms: 等价于 -XX:InitialHeapSize<br>          -Xmx: 等价于-XX:MaxHeapSize</font></p>
+<p>3.1.3.2 KV设值类型</p>
+<p><em>-XX：属性key=属性值value</em><br>eg:-XX:MetaspaceSize=128m</p>
+<h6 id="3-2-查看JVM默认值"><a href="#3-2-查看JVM默认值" class="headerlink" title="3.2.查看JVM默认值"></a>3.2.查看JVM默认值</h6><p>​    3.2.1 Jinfo查看当前运行程序的配置<br>    公式：<font color=red > jinfo -flag 配置项 进程编号;<br>                 jinfo -flags  进程编号; (查看当前所有jvm配置)</font></p>
+<p>​    3.2.2  java  -XX:+PrintFlagsInitial -version (初始状态)</p>
+<p>​    3.2.3 java -XX:+PrintFlagsFinal -version (主要查看修改更新)</p>
+<p><img src="assets/1585291868081.png" alt="1585291868081"><br>= 为默认记载的值    := JVM或者人为修改过的值</p>
+<p><img src="assets/1585292371450.png" alt="1585292371450"></p>
+<p>3.2.4 java -XX:+PrintCommandLineFlags -version</p>
+<p><img src="assets/1585292491862.png" alt="1585292491862"></p>
+<h5 id="4-JVM常用配置"><a href="#4-JVM常用配置" class="headerlink" title="4.JVM常用配置"></a>4.JVM常用配置</h5><p><img src="assets/1585293444976.png" alt="1585293444976"></p>
+<p>-Xms: 初始大小内存，默认为物理内存1/64; 等价于-XX:InitialHeapSize<br>-Xmx: 最大分配内存，默认为物理内存1/4; 等价于-XX:MaxHeapSize<br>-Xss: 设置单个线程的栈空间大小，一般默认为512K~1024K; 等价于-XX:ThreadStackSize<br><img src="assets/1585295513616.png" alt="1585295513616">按照系统进行分配<br>-Xmn: 设置年轻代大小<br>-XX:MetaspaceSize : 设置元空间大小; eg:-Xms10m -Xmx10m -XX:MetaspaceSize=1024m -XX:+PrintFlagsFinal<br>-XX:+PrintGCDetails : </p>
+<p>​    GC:<img src="assets/1585445018451.png" alt="1585445018451"></p>
+<p>​    fullGC:<img src="assets/1585445066746.png" alt="1585445066746"></p>
+<p><img src="assets/1585445357949.png" alt="1585445357949"></p>
+<p>-XX:SurvivoRatio: <img src="assets/1585445552716.png" alt="1585445552716"></p>
+<p>-XX:NewRatio: <img src="assets/1585445839383.png" alt="1585445839383"></p>
+<p><img src="assets/1585445955074.png" alt="1585445955074"></p>
+<p>-XX:MaxTenuringThreshold: 设置垃圾最大年龄。默认为15, 值必须在0到15之间<br><img src="assets/1585446095806.png" alt="1585446095806"></p>
+]]></content>
+  </entry>
+  <entry>
     <title>com.mysql.jdbc.Driver 和 com.mysql.cj.jdbc.Driver</title>
     <url>/2020/03/20/mysql%E7%9B%B8%E5%85%B3/</url>
     <content><![CDATA[<p>####com.mysql.jdbc.Driver 是 mysql-connector-java 5中的， <br><br>####com.mysql.cj.jdbc.Driver 是 mysql-connector-java 6中的</p>
