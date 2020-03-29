@@ -1,6 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>OOM认识</title>
+    <url>/2020/03/29/OOM%E8%AE%A4%E8%AF%86/</url>
+    <content><![CDATA[<h4 id="Java-lang-StackOverflowError"><a href="#Java-lang-StackOverflowError" class="headerlink" title="Java.lang.StackOverflowError"></a>Java.lang.StackOverflowError</h4><p>栈内存溢出，深度的方法调用导致</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StackOverflowErrorDemo</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        stackOverflowError();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">stackOverflowError</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        stackOverflowError(); <span class="comment">// 循环调用导致“main”方法 java.lang.StackOverflowError</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Java-lang-OutOfMemoryError-Java-heap-space"><a href="#Java-lang-OutOfMemoryError-Java-heap-space" class="headerlink" title="Java.lang.OutOfMemoryError:Java heap space"></a>Java.lang.OutOfMemoryError:Java heap space</h4><p>堆内存溢出，对象太多或者太大导致</p>
+<p><img src="../assets/1585462489606.png" alt="1585462489606"></p>
+<h4 id="Java-lang-OutOfMemeoryError-GC-overhead-limit-exceeded"><a href="#Java-lang-OutOfMemeoryError-GC-overhead-limit-exceeded" class="headerlink" title="Java.lang.OutOfMemeoryError:GC overhead limit exceeded"></a>Java.lang.OutOfMemeoryError:GC overhead limit exceeded</h4><p>程序在垃圾回收上花费了98%的时间，却收集不回2%的空间，通常这样的异常伴随着CPU的冲高</p>
+<p><img src="../assets/1585462789995.png" alt="1585462789995"></p>
+<p><img src="../assets/1585463008437.png" alt="1585463008437"></p>
+<p>GC前后内存相差不大</p>
+<h4 id="Java-lang-OutOfMemeoryError-Direct-buffer-memory"><a href="#Java-lang-OutOfMemeoryError-Direct-buffer-memory" class="headerlink" title="Java.lang.OutOfMemeoryError:Direct buffer memory"></a>Java.lang.OutOfMemeoryError:Direct buffer memory</h4><p><img src="../assets/1585463751528.png" alt="1585463751528"></p>
+<p>情况如下：</p>
+<p><img src="../assets/1585463774172.png" alt="1585463774172"></p>
+<p><img src="../assets/1585463825095.png" alt="1585463825095"></p>
+<h4 id="Java-lang-OutOfMemeoryError-unable-to-create-new-native-thread"><a href="#Java-lang-OutOfMemeoryError-unable-to-create-new-native-thread" class="headerlink" title="Java.lang.OutOfMemeoryError:unable to create new native thread"></a>Java.lang.OutOfMemeoryError:unable to create new native thread</h4><p><img src="../assets/1585464910024.png" alt="1585464910024"></p>
+<h4 id="Java-lang-OutOfMemeoryError-Metaspace"><a href="#Java-lang-OutOfMemeoryError-Metaspace" class="headerlink" title="Java.lang.OutOfMemeoryError:Metaspace"></a>Java.lang.OutOfMemeoryError:Metaspace</h4><p>元空间溢出</p>
+<p><img src="../assets/1585480724976.png" alt="1585480724976"></p>
+]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
+      <tags>
+        <tag>JVM</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>强、软、弱、虚引用详解</title>
     <url>/2020/03/29/%E5%BC%BA%E3%80%81%E8%BD%AF%E3%80%81%E5%BC%B1%E3%80%81%E8%99%9A%E5%BC%95%E7%94%A8%E8%AF%A6%E8%A7%A3/</url>
     <content><![CDATA[<h3 id="强、软、弱、虚引用详解"><a href="#强、软、弱、虚引用详解" class="headerlink" title="强、软、弱、虚引用详解"></a>强、软、弱、虚引用详解</h3><h4 id="1-整体架构"><a href="#1-整体架构" class="headerlink" title="1. 整体架构"></a>1. 整体架构</h4><p><img src="/assets/1585449836166.png" alt="1585449836166"></p>
