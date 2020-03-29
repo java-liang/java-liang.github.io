@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://java-liang.gitee.io/"/>
-  <updated>2020-03-29T02:08:52.037Z</updated>
+  <updated>2020-03-29T03:59:02.577Z</updated>
   <id>http://java-liang.gitee.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>强、软、弱、虚引用详解</title>
+    <link href="http://java-liang.gitee.io/2020/03/29/%E5%BC%BA%E3%80%81%E8%BD%AF%E3%80%81%E5%BC%B1%E3%80%81%E8%99%9A%E5%BC%95%E7%94%A8%E8%AF%A6%E8%A7%A3/"/>
+    <id>http://java-liang.gitee.io/2020/03/29/%E5%BC%BA%E3%80%81%E8%BD%AF%E3%80%81%E5%BC%B1%E3%80%81%E8%99%9A%E5%BC%95%E7%94%A8%E8%AF%A6%E8%A7%A3/</id>
+    <published>2020-03-29T02:41:05.779Z</published>
+    <updated>2020-03-29T03:59:02.577Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h3 id=&quot;强、软、弱、虚引用详解&quot;&gt;&lt;a href=&quot;#强、软、弱、虚引用详解&quot; class=&quot;headerlink&quot; title=&quot;强、软、弱、虚引用详解&quot;&gt;&lt;/a&gt;强、软、弱、虚引用详解&lt;/h3&gt;&lt;h4 id=&quot;1-整体架构&quot;&gt;&lt;a href=&quot;#1-整体架构&quot;
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
   
   <entry>
     <title>JVM相关</title>

@@ -6,7 +6,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    JVM相关 |  WKL博客
+    强、软、弱、虚引用详解 |  WKL博客
   </title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   
@@ -31,7 +31,7 @@
   <div id="app">
     <main class="content">
       <section class="outer">
-  <article id="post-JVM" class="article article-type-post" itemscope
+  <article id="post-强、软、弱、虚引用详解" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
   <div class="article-inner">
@@ -39,7 +39,7 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  JVM相关
+  强、软、弱、虚引用详解
 </h1>
   
 
@@ -48,14 +48,10 @@
 
     
     <div class="article-meta">
-      <a href="/2020/03/29/JVM/" class="article-date">
-  <time datetime="2020-03-29T01:57:53.000Z" itemprop="datePublished">2020-03-29</time>
+      <a href="/2020/03/29/%E5%BC%BA%E3%80%81%E8%BD%AF%E3%80%81%E5%BC%B1%E3%80%81%E8%99%9A%E5%BC%95%E7%94%A8%E8%AF%A6%E8%A7%A3/" class="article-date">
+  <time datetime="2020-03-29T02:41:05.779Z" itemprop="datePublished">2020-03-29</time>
 </a>
       
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
-  </div>
-
       
       
 <div class="word_count">
@@ -63,7 +59,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">726字</span>
+            <span class="post-count">307字</span>
         </span>
     </span>
 
@@ -72,7 +68,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> 阅读时长≈</span>
-            <span class="post-count">2分钟</span>
+            <span class="post-count">1分钟</span>
         </span>
     </span>
 </div>
@@ -97,43 +93,22 @@
       
 
       
-      <h2 id="JVM"><a href="#JVM" class="headerlink" title="JVM"></a>JVM</h2><h4 id="JM如何确定垃圾-什么是-GC-Roots"><a href="#JM如何确定垃圾-什么是-GC-Roots" class="headerlink" title="JM如何确定垃圾?什么是 GC Roots"></a>JM如何确定垃圾?什么是 GC Roots</h4><h5 id="1-什么是垃圾"><a href="#1-什么是垃圾" class="headerlink" title="1.什么是垃圾"></a>1.什么是垃圾</h5><p>简单的说就是内存中已经不再被使用到的空间就是垃圾</p>
-<h5 id="2-要进行垃圾回收，如何判断一个对象是否可以被回收"><a href="#2-要进行垃圾回收，如何判断一个对象是否可以被回收" class="headerlink" title="2.要进行垃圾回收，如何判断一个对象是否可以被回收"></a>2.要进行垃圾回收，如何判断一个对象是否可以被回收</h5><h6 id="2-1-引用计数法"><a href="#2-1-引用计数法" class="headerlink" title="2.1.引用计数法"></a>2.1.引用计数法</h6><p>Java中,引用和对象是有关联的。如果要操作对象则必须用引用进行<br>因此,很显然一个简单的办法是通过引用计数来判断一个对象是否可以回收。简单说,给对象中添加一个引用计数器,<br>每当有一个地方引用它,计数器值加1<br>每当有一个引用失效时,计数器值减1。<br>任何时刻计数器值为零的对象就是不可能再被使用的,那么这个对象就是可回收对象<br>那为什么主流的Java虚拟机里面都没有选用这种算法呢?其中最主要的原因是它很难解决对象之间相互循环引用的问题</p>
-<p><img src="/assets/1585286547400.png" alt=""></p>
-<h6 id="2-2-枚举根节点做可达性分析（根搜索路径）"><a href="#2-2-枚举根节点做可达性分析（根搜索路径）" class="headerlink" title="2.2. 枚举根节点做可达性分析（根搜索路径）"></a>2.2. 枚举根节点做可达性分析（根搜索路径）</h6><p><img src="/assets/1585286620894.png" alt=""></p>
-<p>2.2.1 从GCroot开始为引用可达对象</p>
-<p><img src="/assets/1585286822260.png" alt=""></p>
-<p>2.2.2 Java 可以做GCRoots的对象</p>
-<p>​    1）虚拟机栈（栈帧中的局部引用变量区，也叫局部变量区）中引用的对象。</p>
-<p>​    2）方法区的静态属性引用的对象</p>
-<p>​    3）本地方法区的引用的对象</p>
-<p>​    4）本地方法中JNI（native方法）引用的对象</p>
-<h5 id="3-查看JVM系统默认值"><a href="#3-查看JVM系统默认值" class="headerlink" title="3.查看JVM系统默认值"></a>3.查看JVM系统默认值</h5><h6 id="3-1参数类型"><a href="#3-1参数类型" class="headerlink" title="3.1参数类型"></a>3.1参数类型</h6><p>3.1.1标配参数</p>
-<p>-version<br>-help<br>java -showversion</p>
-<p>3.1.2X参数</p>
-<p>-Xint: 解释执行<br>-Xcomp: 第一次使用就编译本地代码<br>-Xmixed: 混合模式</p>
-<p>3.1.3 XX参(重要)</p>
-<p>3.1.3.1 布尔类型</p>
-<p>​    -XX：+或-某个属性值；+表示开启，-表示关<br><img src="/assets/1585289248860.png" alt="1585289248860"></p>
-<p>扩展：<font color=red >-Xms: 等价于 -XX:InitialHeapSize<br>          -Xmx: 等价于-XX:MaxHeapSize</font></p>
-<p>3.1.3.2 KV设值类型</p>
-<p><em>-XX：属性key=属性值value</em><br>eg:-XX:MetaspaceSize=128m</p>
-<h6 id="3-2-查看JVM默认值"><a href="#3-2-查看JVM默认值" class="headerlink" title="3.2.查看JVM默认值"></a>3.2.查看JVM默认值</h6><p>​    3.2.1 Jinfo查看当前运行程序的配置<br>    公式：<font color=red > jinfo -flag 配置项 进程编号;<br>                 jinfo -flags  进程编号; (查看当前所有jvm配置)</font></p>
-<p>​    3.2.2  java  -XX:+PrintFlagsInitial -version (初始状态)</p>
-<p>​    3.2.3 java -XX:+PrintFlagsFinal -version (主要查看修改更新)</p>
-<p><img src="/assets/1585291868081.png" alt="1585291868081"><br>= 为默认记载的值    := JVM或者人为修改过的值</p>
-<p><img src="/assets/1585292371450.png" alt="1585292371450"></p>
-<p>3.2.4 java -XX:+PrintCommandLineFlags -version</p>
-<p><img src="/assets/1585292491862.png" alt="1585292491862"></p>
-<h5 id="4-JVM常用配置"><a href="#4-JVM常用配置" class="headerlink" title="4.JVM常用配置"></a>4.JVM常用配置</h5><p><img src="/assets/1585293444976.png" alt="1585293444976"></p>
-<p>-Xms: 初始大小内存，默认为物理内存1/64; 等价于-XX:InitialHeapSize<br>-Xmx: 最大分配内存，默认为物理内存1/4; 等价于-XX:MaxHeapSize<br>-Xss: 设置单个线程的栈空间大小，一般默认为512K~1024K; 等价于-XX:ThreadStackSize<br><img src="/assets/1585295513616.png" alt="1585295513616">按照系统进行分配<br>-Xmn: 设置年轻代大小<br>-XX:MetaspaceSize : 设置元空间大小; eg:-Xms10m -Xmx10m -XX:MetaspaceSize=1024m -XX:+PrintFlagsFinal<br>-XX:+PrintGCDetails : </p>
-<p>​    GC:<img src="/assets/1585445018451.png" alt="1585445018451"></p>
-<p>​    fullGC:<img src="/assets/1585445066746.png" alt="1585445066746"></p>
-<p><img src="/assets/1585445357949.png" alt="1585445357949"></p>
-<p>-XX:SurvivoRatio: <img src="/assets/1585445552716.png" alt="1585445552716"></p>
-<p>-XX:NewRatio: <img src="/assets/1585445839383.png" alt="1585445839383"></p>
-<p><img src="/assets/1585445955074.png" alt="1585445955074"></p>
-<p>-XX:MaxTenuringThreshold: 设置垃圾最大年龄。默认为15, 值必须在0到15之间<br><img src="/assets/1585446095806.png" alt="1585446095806"></p>
+      <h3 id="强、软、弱、虚引用详解"><a href="#强、软、弱、虚引用详解" class="headerlink" title="强、软、弱、虚引用详解"></a>强、软、弱、虚引用详解</h3><h4 id="1-整体架构"><a href="#1-整体架构" class="headerlink" title="1. 整体架构"></a>1. 整体架构</h4><p><img src="/assets/1585449836166.png" alt="1585449836166"></p>
+<h4 id="2-强引用"><a href="#2-强引用" class="headerlink" title="2.强引用"></a>2.强引用</h4><p><img src="/assets/1585450209409.png" alt="1585450209409"><br></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StrongReferenceDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Object o1 = <span class="keyword">new</span> Object(); <span class="comment">//这样定义默认强引用</span></span><br><span class="line">        Object o2 = o1;</span><br><span class="line">        o1 = <span class="keyword">null</span>; <span class="comment">// 置空</span></span><br><span class="line">        System.gc();</span><br><span class="line">        System.out.println(o2);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/assets/1585450513649.png" alt="1585450513649"></p>
+<h4 id="3-软引用"><a href="#3-软引用" class="headerlink" title="3.软引用"></a>3.软引用</h4><p><img src="/assets/1585450645652.png" alt="1585450645652"><br> </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SoftReferenceDemo</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 内存够用的时候保留，不够用就回收</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">softRef_Memory_Enough</span><span class="params">()</span></span>&#123;</span><br><span class="line">        Object o1 = <span class="keyword">new</span> Object();</span><br><span class="line">        SoftReference&lt;Object&gt; softReference = <span class="keyword">new</span> SoftReference&lt;Object&gt;(o1);</span><br><span class="line">        o1 = <span class="keyword">null</span>;</span><br><span class="line">        System.gc();</span><br><span class="line"></span><br><span class="line">        System.out.println(o1); <span class="comment">// 结果为null</span></span><br><span class="line">        System.out.println(softReference.get()); <span class="comment">//结果为java.lang.Object@3a71f4dd</span></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * JVM 配置，故意产生大对象并配置小内存，让内存不够导致OOM，看软引用的回收情况</span></span><br><span class="line"><span class="comment">     * -Xms5m -Xmx5m -XX:+PrintGCDetails</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">softRef_Memory_NotEnough</span><span class="params">()</span></span>&#123;</span><br><span class="line">        Object o1 = <span class="keyword">new</span> Object();</span><br><span class="line">        SoftReference&lt;Object&gt; softReference = <span class="keyword">new</span> SoftReference&lt;Object&gt;(o1);</span><br><span class="line">        o1 = <span class="keyword">null</span>;</span><br><span class="line">        System.out.println(o1); <span class="comment">// null</span></span><br><span class="line">        System.out.println(softReference.get()); <span class="comment">// java.lang.Object@3a71f4dd</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">byte</span>[] bytes = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">30</span> * <span class="number">1024</span> * <span class="number">1024</span>];</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line"></span><br><span class="line">            System.out.println(o1); <span class="comment">// null</span></span><br><span class="line">            System.out.println(softReference.get()); <span class="comment">// null</span></span><br><span class="line">            <span class="comment">/**</span></span><br><span class="line"><span class="comment">             * 内存溢出异常</span></span><br><span class="line"><span class="comment">             * Exception in thread "main" java.lang.OutOfMemoryError: Java heap space</span></span><br><span class="line"><span class="comment">             * 	at com.*.*.SoftReferenceDemo.softRef_Memory_NotEnough(SoftReferenceDemo.java:41)</span></span><br><span class="line"><span class="comment">             * 	at com.*.*.SoftReferenceDemo.main(SoftReferenceDemo.java:54)</span></span><br><span class="line"><span class="comment">             */</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"><span class="comment">//        softRef_Memory_Enough();</span></span><br><span class="line">        softRef_Memory_NotEnough();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/assets/1585452370876.png" alt="1585452370876"></p>
+<h4 id="4-弱引用"><a href="#4-弱引用" class="headerlink" title="4.弱引用"></a>4.弱引用</h4><p><img src="/assets/1585452082797.png" alt="1585452082797">)<br><img src="/assets/1585452216554.png" alt="1585452216554"><br><strong>谈谈WeakHashMap</strong></p>
+<p><img src="/assets/1585452752450.png" alt="1585452752450"></p>
+<h4 id="5-虚引用"><a href="#5-虚引用" class="headerlink" title="5.虚引用"></a>5.虚引用</h4><p><img src="/assets/1585452912956.png" alt="1585452912956"></p>
+<p><strong>引用队列</strong></p>
+<p>软弱虚引用回收前会被放在引用队列保存下</p>
+<p><img src="/assets/1585454083506.png" alt="1585454083506"></p>
+<h4 id="6-总结"><a href="#6-总结" class="headerlink" title="6.总结"></a>6.总结</h4><p><img src="assets/1585454341539.png" alt="1585454341539"></p>
 
       
       <!-- reward -->
@@ -188,15 +163,13 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://java-liang.gitee.io/2020/03/29/JVM/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://java-liang.gitee.io/2020/03/29/%E5%BC%BA%E3%80%81%E8%BD%AF%E3%80%81%E5%BC%B1%E3%80%81%E8%99%9A%E5%BC%95%E7%94%A8%E8%AF%A6%E8%A7%A3/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JVM/" rel="tag">JVM</a></li></ul>
-
 
     </footer>
 
@@ -206,19 +179,10 @@
   
   <nav class="article-nav">
     
-      <a href="/2020/03/29/%E5%BC%BA%E3%80%81%E8%BD%AF%E3%80%81%E5%BC%B1%E3%80%81%E8%99%9A%E5%BC%95%E7%94%A8%E8%AF%A6%E8%A7%A3/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            强、软、弱、虚引用详解
-          
-        </div>
-      </a>
     
-    
-      <a href="/2020/03/20/mysql%E7%9B%B8%E5%85%B3/" class="article-nav-link">
+      <a href="/2020/03/29/JVM/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">com.mysql.jdbc.Driver 和 com.mysql.cj.jdbc.Driver</div>
+        <div class="article-nav-title">JVM相关</div>
       </a>
     
   </nav>
