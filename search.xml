@@ -1,6 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>生产环境服务器变慢，诊断思路和性能评估</title>
+    <url>/2020/03/30/CPU%E5%8D%A0%E7%94%A8%E8%BF%87%E9%AB%98%E5%A4%84%E7%90%86%E6%96%B9%E6%A1%88/</url>
+    <content><![CDATA[<h2 id="整机"><a href="#整机" class="headerlink" title="整机"></a>整机</h2><h4 id="TOP命令"><a href="#TOP命令" class="headerlink" title="TOP命令"></a>TOP命令</h4><p><img src="/assets/1585570935841.png" alt="1585570935841"></p>
+<p>查看CPU MEN(内存)<br>load average : 3个值相加除以3*100%,大于60%，说明系统负担压力重</p>
+<h4 id="uptime命令"><a href="#uptime命令" class="headerlink" title="uptime命令"></a>uptime命令</h4><p>uptime,系统性能命令的精简版</p>
+<p><img src="/assets/1585571427022.png" alt="1585571427022"></p>
+<h2 id="CPU"><a href="#CPU" class="headerlink" title="CPU"></a>CPU</h2><h4 id="vmstat"><a href="#vmstat" class="headerlink" title="vmstat"></a>vmstat</h4><p><img src="/assets/1585571555511.png" alt="1585571555511"></p>
+<p><img src="/assets/1585572893667.png" alt="1585572893667"></p>
+<h4 id="查看所有CPU核信息"><a href="#查看所有CPU核信息" class="headerlink" title="查看所有CPU核信息"></a>查看所有CPU核信息</h4><p>mpstat -P ALL 2</p>
+<h4 id="每个进程使用cpu的用量分解信息"><a href="#每个进程使用cpu的用量分解信息" class="headerlink" title="每个进程使用cpu的用量分解信息"></a>每个进程使用cpu的用量分解信息</h4><p>pidstat -u 1 -p 进程编号</p>
+<h2 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h2><h4 id="free"><a href="#free" class="headerlink" title="free"></a>free</h4><p><img src="/assets/1585573199274.png" alt="1585573199274"></p>
+<h4 id="查看额外"><a href="#查看额外" class="headerlink" title="查看额外"></a>查看额外</h4><p>pidstat -p 进程号 -r 采样间隔秒数</p>
+<h2 id="硬盘"><a href="#硬盘" class="headerlink" title="硬盘"></a>硬盘</h2><h4 id="df"><a href="#df" class="headerlink" title="df"></a>df</h4><p>查看磁盘剩余空闲数</p>
+<p><img src="/assets/1585573303133.png" alt="1585573303133"></p>
+<h2 id="磁盘IO"><a href="#磁盘IO" class="headerlink" title="磁盘IO"></a>磁盘IO</h2><h4 id="iostat"><a href="#iostat" class="headerlink" title="iostat"></a>iostat</h4><p><img src="/assets/1585573536821.png" alt="1585573536821"></p>
+<p><img src="/assets/1585573541701.png" alt="1585573541701"></p>
+<h4 id="查看额外-1"><a href="#查看额外-1" class="headerlink" title="查看额外"></a>查看额外</h4><p>pidstat -d 采样间隔秒数 -p 进程号</p>
+<h2 id="网络IO"><a href="#网络IO" class="headerlink" title="网络IO"></a>网络IO</h2><h4 id="ifstat"><a href="#ifstat" class="headerlink" title="ifstat"></a>ifstat</h4><p><img src="/assets/1585573939654.png" alt="1585573939654"></p>
+<h2 id="生产环境出现CPU占用过高处理方案"><a href="#生产环境出现CPU占用过高处理方案" class="headerlink" title="生产环境出现CPU占用过高处理方案"></a>生产环境出现CPU占用过高处理方案</h2><ol>
+<li><p>先用top命令找出CPU占比最高的</p>
+<p><img src="/assets/1585575137408.png" alt="1585575137408"></p>
+</li>
+<li><p>ps -ef或者jps进一步定位，得知是一个怎么样的一个后台程序</p>
+</li>
+</ol>
+<p><img src="/assets/1585575198022.png" alt="1585575198022">)<br><img src="/assets/1585575236251.png" alt="1585575236251"></p>
+<ol start="3">
+<li><p>定位到具体线程或者代码</p>
+<p>ps -mp 进程 -o THREAD,tid,time</p>
+<p><img src="/assets/1585575353286.png" alt="1585575353286"><br></p>
+</li>
+</ol>
+<p><img src="/assets/1585575374513.png" alt="1585575374513"></p>
+<ol start="4">
+<li>将需要的线程ID转换为16进制格式(英文小写格式)</li>
+</ol>
+<p><img src="/assets/1585575458761.png" alt="1585575458761"><br></p>
+<p>​    也可用计算器</p>
+<ol start="5">
+<li>jstack 进程ID | grep tid(16进制线程ID小写英文) -A60</li>
+</ol>
+<p><img src="/assets/1585575563391.png" alt="1585575563391"></p>
+]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>JVM垃圾回收算法和垃圾收集器</title>
     <url>/2020/03/29/JVM%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/</url>
     <content><![CDATA[<h2 id="GC算法"><a href="#GC算法" class="headerlink" title="GC算法"></a>GC算法</h2><p>GC算法（引用计数/复制/标清/标整）是内存回收的方法论，垃圾收集器就是算法落地实现<br>因为目前为止还没有完美的收集器出现，更加没有万能的收集器，只是针对具体应用最合适的收集器，进行分代收集。</p>

@@ -6,7 +6,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    JVM垃圾回收算法和垃圾收集器 |  WKL博客
+    生产环境服务器变慢，诊断思路和性能评估 |  WKL博客
   </title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   
@@ -31,7 +31,7 @@
   <div id="app">
     <main class="content">
       <section class="outer">
-  <article id="post-JVM垃圾回收" class="article article-type-post" itemscope
+  <article id="post-CPU占用过高处理方案" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
   <div class="article-inner">
@@ -39,7 +39,7 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  JVM垃圾回收算法和垃圾收集器
+  生产环境服务器变慢，诊断思路和性能评估
 </h1>
   
 
@@ -48,8 +48,8 @@
 
     
     <div class="article-meta">
-      <a href="/2020/03/29/JVM%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" class="article-date">
-  <time datetime="2020-03-29T13:05:50.000Z" itemprop="datePublished">2020-03-29</time>
+      <a href="/2020/03/30/CPU%E5%8D%A0%E7%94%A8%E8%BF%87%E9%AB%98%E5%A4%84%E7%90%86%E6%96%B9%E6%A1%88/" class="article-date">
+  <time datetime="2020-03-30T12:01:19.000Z" itemprop="datePublished">2020-03-30</time>
 </a>
       
   <div class="article-category">
@@ -63,7 +63,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">831字</span>
+            <span class="post-count">244字</span>
         </span>
     </span>
 
@@ -72,7 +72,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> 阅读时长≈</span>
-            <span class="post-count">2分钟</span>
+            <span class="post-count">1分钟</span>
         </span>
     </span>
 </div>
@@ -97,52 +97,46 @@
       
 
       
-      <h2 id="GC算法"><a href="#GC算法" class="headerlink" title="GC算法"></a>GC算法</h2><p>GC算法（引用计数/复制/标清/标整）是内存回收的方法论，垃圾收集器就是算法落地实现<br>因为目前为止还没有完美的收集器出现，更加没有万能的收集器，只是针对具体应用最合适的收集器，进行分代收集。</p>
-<h3 id="垃圾收集器分类"><a href="#垃圾收集器分类" class="headerlink" title="垃圾收集器分类"></a>垃圾收集器分类</h3><p><img src="/assets/1585489393200.png" alt="1585489393200"></p>
-<p>serial（串行），parallel（并行），CMS（并发）,  G1</p>
-<h4 id="串行垃圾回收器（Serial）"><a href="#串行垃圾回收器（Serial）" class="headerlink" title="串行垃圾回收器（Serial）"></a>串行垃圾回收器（Serial）</h4><p>它为单线程环境设计并且只使用一个线程进行垃圾回收，会暂停所有的用户线程。所以不适合服务器环境</p>
-<h4 id="并行垃圾回收器（Parallel）"><a href="#并行垃圾回收器（Parallel）" class="headerlink" title="并行垃圾回收器（Parallel）"></a>并行垃圾回收器（Parallel）</h4><p>多个垃圾回收线程并行工作，此时用户线程是暂停的，适用于科学计算/大数据处理等弱交互场景，相比较串行时间短</p>
-<h4 id="并发垃圾回收器（CMS）"><a href="#并发垃圾回收器（CMS）" class="headerlink" title="并发垃圾回收器（CMS）"></a>并发垃圾回收器（CMS）</h4><p>用户线程和垃圾收集线程同时执行（不一定是并行，可能交替执行），不需要停顿用户线程<br>互联网公司多用它，适用于对响应时间有要求的场景</p>
-<h4 id="G1垃圾回收器"><a href="#G1垃圾回收器" class="headerlink" title="G1垃圾回收器"></a>G1垃圾回收器</h4><p>G1垃圾回收器将堆内存分割成不同的区域然后并发的对其进行垃圾回收</p>
-<h3 id="查看默认回收器"><a href="#查看默认回收器" class="headerlink" title="查看默认回收器"></a>查看默认回收器</h3><p><img src="/assets/1585535011147.png" alt="1585535011147"></p>
-<p>默认为-XX:+UseParallelGC 并行回收</p>
-<p><img src="/assets/1585535803562.png" alt="1585535803562"></p>
-<h2 id="7大垃圾收集器"><a href="#7大垃圾收集器" class="headerlink" title="7大垃圾收集器"></a>7大垃圾收集器</h2><p><img src="/assets/1585536317271.png" alt="1585536317271"></p>
-<p><img src="/assets/1585536588026.png" alt="1585536588026"></p>
-<h3 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h3><p><img src="/assets/1585536841833.png" alt="1585536841833"></p>
-<h3 id="新生代"><a href="#新生代" class="headerlink" title="新生代"></a>新生代</h3><h4 id="串行GC（Serial）-（Serial-Coping）"><a href="#串行GC（Serial）-（Serial-Coping）" class="headerlink" title="串行GC（Serial）/（Serial Coping）"></a>串行GC（Serial）/（Serial Coping）</h4><p><img src="/assets/1585537114643.png" alt="1585537114643"></p>
-<p><img src="/assets/1585537151362.png" alt="1585537151362"></p>
-<p><img src="/assets/1585537156384.png" alt="1585537156384"></p>
-<h4 id="并行GC-ParNew"><a href="#并行GC-ParNew" class="headerlink" title="并行GC(ParNew)"></a>并行GC(ParNew)</h4><p><img src="/assets/1585537519562.png" alt="1585537519562"></p>
-<p><img src="/assets/1585554290656.png" alt="1585554290656"></p>
-<h4 id="并行回收GC-Parallel-Parallel-Scavenge"><a href="#并行回收GC-Parallel-Parallel-Scavenge" class="headerlink" title="并行回收GC(Parallel)/(Parallel Scavenge)"></a>并行回收GC(Parallel)/(Parallel Scavenge)</h4><p><img src="/assets/1585543902543.png" alt="1585543902543"></p>
-<p><img src="/assets/1585543938417.png" alt="1585543938417"></p>
-<h3 id="老年代"><a href="#老年代" class="headerlink" title="老年代"></a>老年代</h3><h4 id="串行回收GC-Serial-Old-Serial-MSC"><a href="#串行回收GC-Serial-Old-Serial-MSC" class="headerlink" title="串行回收GC(Serial Old)/(Serial MSC)"></a>串行回收GC(Serial Old)/(Serial MSC)</h4><p><img src="/assets/1585544867741.png" alt="1585544867741"></p>
-<h4 id="并行GC-Parallel-Old-Parallel-MSC"><a href="#并行GC-Parallel-Old-Parallel-MSC" class="headerlink" title="并行GC(Parallel Old)/(Parallel MSC)"></a>并行GC(Parallel Old)/(Parallel MSC)</h4><p><img src="/assets/1585544922404.png" alt="1585544922404"></p>
-<h4 id="并发标记清除GC-CMS"><a href="#并发标记清除GC-CMS" class="headerlink" title="并发标记清除GC(CMS) *"></a>并发标记清除GC(CMS) *</h4><p><img src="/assets/1585545111395.png" alt="1585545111395"></p>
-<p><img src="/assets/1585545116822.png" alt="1585545116822"></p>
-<h5 id="CMS四步标记过程"><a href="#CMS四步标记过程" class="headerlink" title="CMS四步标记过程"></a>CMS四步标记过程</h5><h6 id="初始标记-CMS-initial-mark"><a href="#初始标记-CMS-initial-mark" class="headerlink" title="初始标记(CMS initial mark)"></a>初始标记(CMS initial mark)</h6><p>​    只是标记一下GC Roots能直接关联的对象，速度很快，仍然需要暂停所有的工作线程。</p>
-<h6 id="并发标记-CMS-concurrent-mark-和用户线程一起"><a href="#并发标记-CMS-concurrent-mark-和用户线程一起" class="headerlink" title="并发标记(CMS concurrent mark)和用户线程一起"></a>并发标记(CMS concurrent mark)和用户线程一起</h6><p>​    进行GC Roots跟踪的过程，和用户线程一起工作，不需要暂停线程。主要标记过程，标记全部对象。</p>
-<h6 id="重新标记-CMS-remark"><a href="#重新标记-CMS-remark" class="headerlink" title="重新标记(CMS remark)"></a>重新标记(CMS remark)</h6><p>​    为了修正并发标记期间，因用户程序继续进行而导致的标记产生变动的那一部分对象的标记记录，仍然需要暂停所有的线程。</p>
-<p>​    由于并发标记时，用户程序仍然运行，因此在正式清理前，再做修正。</p>
-<h6 id="并发清除-CMS-concurrent-sweep-和用户线程一起"><a href="#并发清除-CMS-concurrent-sweep-和用户线程一起" class="headerlink" title="并发清除(CMS concurrent sweep)和用户线程一起"></a>并发清除(CMS concurrent sweep)和用户线程一起</h6><p>​    清除了GC Roots不可达对象，和用户线程一起工作，不需要暂停工作线程。基于标记结果，直接清理对象。<br>    由于耗时最长的并发标记和并发清除过程中，垃圾收集线程可以和用户现在一起并发工作，所以总体上来看CMS收集器的内存回收和用户线程是一起并发的执行。</p>
-<p><img src="/assets/1585546622386.png" alt="1585546622386"></p>
-<h5 id="CMS优缺点"><a href="#CMS优缺点" class="headerlink" title="CMS优缺点"></a>CMS优缺点</h5><p>优点：并发收集低停顿</p>
-<p>缺点：1. 并发执行，对CPU资源压力大<br><img src="/assets/1585546724605.png" alt="1585546724605"></p>
-<p>​           2. 采用的标记清除算法会导致大量碎片<br><img src="/assets/1585546748880.png" alt="1585546748880"></p>
-<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p><img src="/assets/1585546948759.png" alt="1585546948759"></p>
-<h4 id="如何选择垃圾收集器"><a href="#如何选择垃圾收集器" class="headerlink" title="如何选择垃圾收集器"></a>如何选择垃圾收集器</h4><p><img src="/assets/1585550425973.png" alt="1585550425973"></p>
-<p><img src="/assets/1585550437700.png" alt="1585550437700"></p>
-<h4 id="G1收集器"><a href="#G1收集器" class="headerlink" title="G1收集器"></a>G1收集器</h4><h5 id="以前收集器特点"><a href="#以前收集器特点" class="headerlink" title="以前收集器特点"></a>以前收集器特点</h5><p><img src="/assets/1585551110591.png" alt="1585551110591"></p>
-<h5 id="G1是什么"><a href="#G1是什么" class="headerlink" title="G1是什么"></a>G1是什么</h5><p><img src="/assets/1585551467595.png" alt="1585551467595"></p>
-<p><img src="/assets/1585551477249.png" alt="1585551477249">)<br><img src="/assets/1585551482298.png" alt="1585551482298"></p>
-<h5 id="G1-特点"><a href="#G1-特点" class="headerlink" title="G1 特点"></a>G1 特点</h5><p><img src="/assets/1585551757578.png" alt="1585551757578"></p>
-<h5 id="底层原理"><a href="#底层原理" class="headerlink" title="底层原理"></a>底层原理</h5><h6 id="1-Region区域化垃圾收集器"><a href="#1-Region区域化垃圾收集器" class="headerlink" title="1. Region区域化垃圾收集器"></a>1. Region区域化垃圾收集器</h6><p>最大好处是化整为零，避免全内存扫描，只需要按照区域来进行扫描即可</p>
-<p><img src="/assets/1585552452683.png" alt="1585552452683">)<br><img src="/assets/1585552471837.png" alt="1585552471837">)<br><img src="/assets/1585552672520.png" alt="1585552672520"></p>
-<h6 id="2-回收步骤"><a href="#2-回收步骤" class="headerlink" title="2. 回收步骤"></a>2. 回收步骤</h6><p><img src="/assets/1585552866248.png" alt="1585552866248">)<br><img src="/assets/1585552882014.png" alt="1585552882014"></p>
-<h6 id="3-四步过程"><a href="#3-四步过程" class="headerlink" title="3. 四步过程"></a>3. 四步过程</h6><p><img src="/assets/1585553015747.png" alt="1585553015747"></p>
-<h5 id="常用配置参数"><a href="#常用配置参数" class="headerlink" title="常用配置参数"></a>常用配置参数</h5><p><img src="/assets/1585553157005.png" alt="1585553157005"></p>
-<h5 id="和CMS相比的优势"><a href="#和CMS相比的优势" class="headerlink" title="和CMS相比的优势"></a>和CMS相比的优势</h5><p><img src="/assets/1585553202716.png" alt="1585553202716"></p>
+      <h2 id="整机"><a href="#整机" class="headerlink" title="整机"></a>整机</h2><h4 id="TOP命令"><a href="#TOP命令" class="headerlink" title="TOP命令"></a>TOP命令</h4><p><img src="/assets/1585570935841.png" alt="1585570935841"></p>
+<p>查看CPU MEN(内存)<br>load average : 3个值相加除以3*100%,大于60%，说明系统负担压力重</p>
+<h4 id="uptime命令"><a href="#uptime命令" class="headerlink" title="uptime命令"></a>uptime命令</h4><p>uptime,系统性能命令的精简版</p>
+<p><img src="/assets/1585571427022.png" alt="1585571427022"></p>
+<h2 id="CPU"><a href="#CPU" class="headerlink" title="CPU"></a>CPU</h2><h4 id="vmstat"><a href="#vmstat" class="headerlink" title="vmstat"></a>vmstat</h4><p><img src="/assets/1585571555511.png" alt="1585571555511"></p>
+<p><img src="/assets/1585572893667.png" alt="1585572893667"></p>
+<h4 id="查看所有CPU核信息"><a href="#查看所有CPU核信息" class="headerlink" title="查看所有CPU核信息"></a>查看所有CPU核信息</h4><p>mpstat -P ALL 2</p>
+<h4 id="每个进程使用cpu的用量分解信息"><a href="#每个进程使用cpu的用量分解信息" class="headerlink" title="每个进程使用cpu的用量分解信息"></a>每个进程使用cpu的用量分解信息</h4><p>pidstat -u 1 -p 进程编号</p>
+<h2 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h2><h4 id="free"><a href="#free" class="headerlink" title="free"></a>free</h4><p><img src="/assets/1585573199274.png" alt="1585573199274"></p>
+<h4 id="查看额外"><a href="#查看额外" class="headerlink" title="查看额外"></a>查看额外</h4><p>pidstat -p 进程号 -r 采样间隔秒数</p>
+<h2 id="硬盘"><a href="#硬盘" class="headerlink" title="硬盘"></a>硬盘</h2><h4 id="df"><a href="#df" class="headerlink" title="df"></a>df</h4><p>查看磁盘剩余空闲数</p>
+<p><img src="/assets/1585573303133.png" alt="1585573303133"></p>
+<h2 id="磁盘IO"><a href="#磁盘IO" class="headerlink" title="磁盘IO"></a>磁盘IO</h2><h4 id="iostat"><a href="#iostat" class="headerlink" title="iostat"></a>iostat</h4><p><img src="/assets/1585573536821.png" alt="1585573536821"></p>
+<p><img src="/assets/1585573541701.png" alt="1585573541701"></p>
+<h4 id="查看额外-1"><a href="#查看额外-1" class="headerlink" title="查看额外"></a>查看额外</h4><p>pidstat -d 采样间隔秒数 -p 进程号</p>
+<h2 id="网络IO"><a href="#网络IO" class="headerlink" title="网络IO"></a>网络IO</h2><h4 id="ifstat"><a href="#ifstat" class="headerlink" title="ifstat"></a>ifstat</h4><p><img src="/assets/1585573939654.png" alt="1585573939654"></p>
+<h2 id="生产环境出现CPU占用过高处理方案"><a href="#生产环境出现CPU占用过高处理方案" class="headerlink" title="生产环境出现CPU占用过高处理方案"></a>生产环境出现CPU占用过高处理方案</h2><ol>
+<li><p>先用top命令找出CPU占比最高的</p>
+<p><img src="/assets/1585575137408.png" alt="1585575137408"></p>
+</li>
+<li><p>ps -ef或者jps进一步定位，得知是一个怎么样的一个后台程序</p>
+</li>
+</ol>
+<p><img src="/assets/1585575198022.png" alt="1585575198022">)<br><img src="/assets/1585575236251.png" alt="1585575236251"></p>
+<ol start="3">
+<li><p>定位到具体线程或者代码</p>
+<p>ps -mp 进程 -o THREAD,tid,time</p>
+<p><img src="/assets/1585575353286.png" alt="1585575353286"><br></p>
+</li>
+</ol>
+<p><img src="/assets/1585575374513.png" alt="1585575374513"></p>
+<ol start="4">
+<li>将需要的线程ID转换为16进制格式(英文小写格式)</li>
+</ol>
+<p><img src="/assets/1585575458761.png" alt="1585575458761"><br></p>
+<p>​    也可用计算器</p>
+<ol start="5">
+<li>jstack 进程ID | grep tid(16进制线程ID小写英文) -A60</li>
+</ol>
+<p><img src="/assets/1585575563391.png" alt="1585575563391"></p>
 
       
       <!-- reward -->
@@ -197,14 +191,14 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://java-liang.gitee.io/2020/03/29/JVM%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://java-liang.gitee.io/2020/03/30/CPU%E5%8D%A0%E7%94%A8%E8%BF%87%E9%AB%98%E5%A4%84%E7%90%86%E6%96%B9%E6%A1%88/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JVM/" rel="tag">JVM</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li></ul>
 
 
     </footer>
@@ -215,19 +209,10 @@
   
   <nav class="article-nav">
     
-      <a href="/2020/03/30/CPU%E5%8D%A0%E7%94%A8%E8%BF%87%E9%AB%98%E5%A4%84%E7%90%86%E6%96%B9%E6%A1%88/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            生产环境服务器变慢，诊断思路和性能评估
-          
-        </div>
-      </a>
     
-    
-      <a href="/2020/03/29/OOM%E8%AE%A4%E8%AF%86/" class="article-nav-link">
+      <a href="/2020/03/29/JVM%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">OOM认识</div>
+        <div class="article-nav-title">JVM垃圾回收算法和垃圾收集器</div>
       </a>
     
   </nav>
