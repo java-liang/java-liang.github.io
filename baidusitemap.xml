@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://java-liang.gitee.io/2020/03/31/Hystrix%E7%86%94%E6%96%AD%E5%99%A8/</loc>
+    <lastmod>2020-04-08</lastmod>
+  </url>  <url>
+    <loc>http://java-liang.gitee.io/2020/04/01/Nginx%E7%9B%B8%E5%85%B3/</loc>
+    <lastmod>2020-04-01</lastmod>
+  </url>  <url>
     <loc>http://java-liang.gitee.io/2020/03/30/CPU%E5%8D%A0%E7%94%A8%E8%BF%87%E9%AB%98%E5%A4%84%E7%90%86%E6%96%B9%E6%A1%88/</loc>
     <lastmod>2020-03-30</lastmod>
   </url>  <url>

@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://java-liang.gitee.io/"/>
-  <updated>2020-03-30T13:40:58.969Z</updated>
+  <updated>2020-04-01T07:16:27.842Z</updated>
   <id>http://java-liang.gitee.io/</id>
   
   <author>
@@ -15,6 +15,60 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Nginx相关</title>
+    <link href="http://java-liang.gitee.io/2020/04/01/Nginx%E7%9B%B8%E5%85%B3/"/>
+    <id>http://java-liang.gitee.io/2020/04/01/Nginx%E7%9B%B8%E5%85%B3/</id>
+    <published>2020-04-01T01:42:03.000Z</published>
+    <updated>2020-04-01T07:16:27.842Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;Nginx-简介&quot;&gt;&lt;a href=&quot;#Nginx-简介&quot; class=&quot;headerlink&quot; title=&quot;Nginx 简介&quot;&gt;&lt;/a&gt;Nginx 简介&lt;/h2&gt;&lt;h3 id=&quot;理论&quot;&gt;&lt;a href=&quot;#理论&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+    
+      <category term="技术" scheme="http://java-liang.gitee.io/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+    
+      <category term="Nginx" scheme="http://java-liang.gitee.io/tags/Nginx/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Hystrix熔断器</title>
+    <link href="http://java-liang.gitee.io/2020/03/31/Hystrix%E7%86%94%E6%96%AD%E5%99%A8/"/>
+    <id>http://java-liang.gitee.io/2020/03/31/Hystrix%E7%86%94%E6%96%AD%E5%99%A8/</id>
+    <published>2020-03-31T05:05:38.000Z</published>
+    <updated>2020-04-08T12:31:56.763Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;概述&quot;&gt;&lt;a href=&quot;#概述&quot; class=&quot;headerlink&quot; title=&quot;概述&quot;&gt;&lt;/a&gt;概述&lt;/h2&gt;&lt;h4 id=&quot;分布式系统面临的问题&quot;&gt;&lt;a href=&quot;#分布式系统面临的问题&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+    
+      <category term="技术" scheme="http://java-liang.gitee.io/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+    
+      <category term="SpringCloud" scheme="http://java-liang.gitee.io/tags/SpringCloud/"/>
+    
+  </entry>
   
   <entry>
     <title>生产环境服务器变慢，诊断思路和性能评估</title>

@@ -1,6 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Nginx相关</title>
+    <url>/2020/04/01/Nginx%E7%9B%B8%E5%85%B3/</url>
+    <content><![CDATA[<h2 id="Nginx-简介"><a href="#Nginx-简介" class="headerlink" title="Nginx 简介"></a>Nginx 简介</h2><h3 id="理论"><a href="#理论" class="headerlink" title="理论"></a>理论</h3><h4 id="1-1-概述"><a href="#1-1-概述" class="headerlink" title="1.1 概述"></a>1.1 概述</h4><p>​    Nginx 是一个高性能的 HTTP 和反向代理服务器,特点是占有内存少，并发能 力强<br></p>
+<h4 id="1-2-Nginx-作为-web-服务器"><a href="#1-2-Nginx-作为-web-服务器" class="headerlink" title="1.2 Nginx 作为 web 服务器"></a>1.2 Nginx 作为 web 服务器</h4><p>​    Nginx 可以作为静态页面的 web 服务器，同时还支持 CGI 协议的动态语言，比如 perl、php 等。但是不支持 java。Java 程序只能通过与 tomcat 配合完成。Nginx 专为性能优化而开发， 性能是其最重要的考量,实现上非常注重效率 ，能经受高负载的考验,有报告表明能支持高 达 50,000 个并发连接</p>
+<h4 id="1-3-正向代理"><a href="#1-3-正向代理" class="headerlink" title="1.3 正向代理"></a>1.3 正向代理</h4><p>​    Nginx 不仅可以做反向代理，实现负载均衡。还能用作正向代理来进行上网等功能。 正向代理：如果把局域网外的 Internet 想象成一个巨大的资源库，则局域网中的客户端要访 问 Internet，则需要通过代理服务器来访问，这种代理服务就称为正向代理。<br><img src="../assets/1585705784316.png" alt="1585705784316"></p>
+<h4 id="1-4-方向代理"><a href="#1-4-方向代理" class="headerlink" title="1.4 方向代理"></a>1.4 方向代理</h4><p>​    反向代理，其实客户端对代理是无感知的，因为客户端不需要任何配置就可以访问，我们只 需要将请求发送到反向代理服务器，由反向代理服务器去选择目标服务器获取数据后，在返 回给客户端，此时反向代理服务器和目标服务器对外就是一个服务器，暴露的是代理服务器 地址，隐藏了真实服务器 IP 地址<br><img src="../assets/1585705918882.png" alt="1585705918882"></p>
+<h4 id="1-5-负载均衡"><a href="#1-5-负载均衡" class="headerlink" title="1.5 负载均衡"></a>1.5 负载均衡</h4><p>​    单个服务器解 决不了，我们增加服务器的数量，然后将请求分发到各个服务器上，将原先请求集中到单个<br>服务器上的情况改为将请求分发到多个服务器上，将负载分发到不同的服务器，也就是我们 所说的负载均衡<br><img src="../assets/1585706086788.png" alt="1585706086788">)<br><img src="../assets/1585706165945.png" alt="1585706165945"></p>
+<h4 id="1-6-动静分离"><a href="#1-6-动静分离" class="headerlink" title="1.6 动静分离"></a>1.6 动静分离</h4><p>​    为了加快网站的解析速度，可以把动态页面和静态页面由不同的服务器来解析，加快解析速 度。降低原来单个服务器的压力。<br><img src="../assets/1585706382026.png" alt="1585706382026"></p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><h4 id="2-1-安装-pcre"><a href="#2-1-安装-pcre" class="headerlink" title="2.1 安装 pcre"></a>2.1 安装 pcre</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; 下载</span><br><span class="line">wget http:&#x2F;&#x2F;downloads.sourceforge.net&#x2F;project&#x2F;pcre&#x2F;pcre&#x2F;8.37&#x2F;pcre-8.37.tar.gz</span><br><span class="line">&#x2F;&#x2F; 解压</span><br><span class="line">tar -xvf pcre-8.37.tar.gz</span><br><span class="line">&#x2F;&#x2F; 在解压目录下执行.&#x2F;configure</span><br><span class="line">.&#x2F;configure</span><br><span class="line">&#x2F;&#x2F; 在pcre目录下执行make而后在make install</span><br><span class="line">make &amp;&amp; make install</span><br><span class="line">&#x2F;&#x2F; 查看版本</span><br><span class="line">pcre-config --version</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-2-安装-openssl-、zlib-、-gcc-依赖"><a href="#2-2-安装-openssl-、zlib-、-gcc-依赖" class="headerlink" title="2.2 安装 openssl 、zlib 、 gcc 依赖"></a>2.2 安装 openssl 、zlib 、 gcc 依赖</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F;安装 openssl 、zlib 、 gcc 依赖 </span><br><span class="line">yum -y install make zlib zlib-devel gcc-c++ libtool  openssl openssl-devel</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-3-安装-nginx"><a href="#2-3-安装-nginx" class="headerlink" title="2.3 安装 nginx"></a>2.3 安装 nginx</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">// 解压</span><br><span class="line">tar -xvf nginx-1.12.2.tar.gz</span><br><span class="line"></span><br><span class="line">//开始安装，安装完成后会在、usr/local下生成nginx文件</span><br><span class="line"> ./configure &amp;&amp; make &amp;&amp; make install</span><br><span class="line"> </span><br><span class="line">//启动nginx</span><br><span class="line">/usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf</span><br></pre></td></tr></table></figure>
+
+<p>遇到问题：1.12版本在centos8版本下报错</p>
+<p><img src="../assets/1585709630863.png" alt="1585709630863"></p>
+<p>解决方案：升级Nginx版本为1.17.6</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">查看开放的端口号 </span><br><span class="line">firewall-cmd --list-all </span><br><span class="line"> </span><br><span class="line">设置开放的端口号 </span><br><span class="line">firewall-cmd --add-service=http –permanent sudo firewall-cmd --add-port=80/tcp --permanent </span><br><span class="line"> </span><br><span class="line">重启防火墙 </span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+
+<h3 id="Nginx常用命令"><a href="#Nginx常用命令" class="headerlink" title="Nginx常用命令"></a>Nginx常用命令</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">进入 nginx 目录中 </span><br><span class="line">cd  &#x2F;usr&#x2F;local&#x2F;nginx&#x2F;sbin </span><br><span class="line"> </span><br><span class="line">1、查看 nginx 版本号  </span><br><span class="line">.&#x2F;nginx -v </span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">2、启动 nginx  </span><br><span class="line">.&#x2F;nginx </span><br><span class="line"> </span><br><span class="line">3、停止 </span><br><span class="line">nginx  .&#x2F;nginx  -s  stop </span><br><span class="line"> </span><br><span class="line">4、重新加载 </span><br><span class="line">nginx  .&#x2F;nginx -s reload</span><br></pre></td></tr></table></figure>
+
+<h3 id="Nginx配置文件"><a href="#Nginx配置文件" class="headerlink" title="Nginx配置文件"></a>Nginx配置文件</h3><h4 id="4-1-位置"><a href="#4-1-位置" class="headerlink" title="4.1 位置"></a>4.1 位置</h4><p>cd /usr/local/nginx/conf/nginx.conf </p>
+<h4 id="4-2-组成"><a href="#4-2-组成" class="headerlink" title="4.2 组成"></a>4.2 组成</h4><p>包含三部分</p>
+<h6 id="全局块"><a href="#全局块" class="headerlink" title="全局块"></a>全局块</h6><pre><code>从配置文件开始到 events 块之间的内容，主要会设置一些影响nginx 服务器整体运行的配置指令，主要包括配 置运行 Nginx 服务器的用户（组）、允许生成的 worker process 数，进程 PID 存放路径、日志存放路径和类型以 及配置文件的引入等。</code></pre><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!--这是 Nginx 服务器并发处理服务的关键配置，worker_processes 值越大，可以支持的并发处理量也越多，但是 会受到硬件、软件等设备的制约.--&gt;</span></span><br><span class="line">worker_processes  1;</span><br></pre></td></tr></table></figure>
+
+
+
+<h6 id="events块"><a href="#events块" class="headerlink" title="events块"></a>events块</h6><p>​    events 块涉及的指令主要影响 Nginx 服务器与用户的网络连接，常用的设置包括是否开启对多 work process 下的网络连接进行序列化，是否允许同时接收多个网络连接，选取哪种事件驱动模型来处理连接请求，每个 word process 可以同时支持的最大连接数等。 </p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 表示每个 work process 支持的最大连接数为 1024. </span></span><br><span class="line"><span class="comment">  这部分的配置对 Nginx 的性能影响较大，在实际中应该灵活配置.--&gt;</span></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h6 id="http块"><a href="#http块" class="headerlink" title="http块"></a>http块</h6><p>​    Nginx 服务器配置中最频繁的部分，代理、缓存和日志定义等绝大多数功能和第三方模块的配置都在这里。</p>
+<p>需要注意的是：http 块也可以包括 <font color =red >http全局块、server 块</font>。</p>
+<ol>
+<li><p>http全局块</p>
+<p>​    http全局块配置的指令包括文件引入、MIME-TYPE 定义、日志自定义、连接超时时间、单链接请求数上限等。 </p>
+</li>
+<li><p>server块</p>
+<pre><code>这块和虚拟主机有密切关系，虚拟主机从用户角度看，和一台独立的硬件主机是完全一样的，该技术的产生是为了 节省互联网服务器硬件成本。</code></pre><p>每个 http 块可以包括多个 server 块，而每个 server 块就相当于一个虚拟主机。<br>而每个 server 块也分为全局 server 块，以及可以同时包含多个 locaton 块。</p>
+</li>
+</ol>
+<pre><code>（1）、全局 server 块 
+      最常见的配置是本虚拟机主机的监听配置和本虚拟主机的名称或IP配置。 
+（2）、location 块 
+    一个 server 块可以配置多个 location 块。 
+这块的主要作用是基于 Nginx  服务器接收到的请求字符串（例如 server_name/uri-string），对虚拟主机名称 （也可以是IP 别名）之外的字符串（例如 前面的 /uri-string）进行匹配，对特定的请求进行处理。地址定向、数据缓 存和应答控制等功能，还有许多第三方模块的配置也在这里进行。 </code></pre><h3 id="nginx-配置实例-反向代理"><a href="#nginx-配置实例-反向代理" class="headerlink" title="nginx 配置实例-反向代理"></a>nginx 配置实例-反向代理</h3>]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
+      <tags>
+        <tag>Nginx</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hystrix熔断器</title>
+    <url>/2020/03/31/Hystrix%E7%86%94%E6%96%AD%E5%99%A8/</url>
+    <content><![CDATA[<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><h4 id="分布式系统面临的问题"><a href="#分布式系统面临的问题" class="headerlink" title="分布式系统面临的问题"></a>分布式系统面临的问题</h4><p>复杂分布式体系结构中的应用程序   有数10个依赖关系,每个依赖关系在某些时候将不可避免地失败<br><img src="/assets/1585631282941.png" alt="1585631282941"></p>
+<p><img src="/assets/1585631289628.png" alt="1585631289628"></p>
+<h4 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h4><p><img src="/assets/1585631316660.png" alt="1585631316660"></p>
+<h4 id="能干嘛"><a href="#能干嘛" class="headerlink" title="能干嘛"></a>能干嘛</h4><p>服务降级<br>服务熔断<br>接近实时的监控</p>
+<h4 id="官网"><a href="#官网" class="headerlink" title="官网"></a>官网</h4><p>官网资料：<a href="https://github.com/Netflix/hystrix/wiki" target="_blank" rel="noopener">https://github.com/Netflix/hystrix/wiki</a></p>
+<h2 id="HyStrix重要概念"><a href="#HyStrix重要概念" class="headerlink" title="HyStrix重要概念"></a>HyStrix重要概念</h2><h4 id="服务降级"><a href="#服务降级" class="headerlink" title="服务降级"></a>服务降级</h4><p>服务器忙,请稍后再试,不让客户端等待并立刻返回一个友好提示,fallback</p>
+<p><img src="/assets/1585631492227.png" alt="1585631492227"></p>
+<h4 id="服务熔断"><a href="#服务熔断" class="headerlink" title="服务熔断"></a>服务熔断</h4><p>类比保险丝达到最大服务访问后,直接拒绝访问,拉闸限电,然后调用服务降级的方法并返回友好提示（相当于保险丝）<br></p>
+<p>服务的降级-&gt;进而熔断-&gt;恢复调用链路</p>
+<h4 id="服务限流"><a href="#服务限流" class="headerlink" title="服务限流"></a>服务限流</h4><p>秒杀高并发等操作,严禁一窝蜂的过来拥挤,大家排队,一秒钟N个,有序进行</p>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h4 id="服务降级-1"><a href="#服务降级-1" class="headerlink" title="服务降级"></a>服务降级</h4><h5 id="业务类"><a href="#业务类" class="headerlink" title="业务类"></a>业务类</h5><p>@HystrixCommand注解</p>
+<p>设置自身调用超时时间的峰值,峰值内可以正常运行,  超过了需要有兜底的方法处理,做服务降级fallback</p>
+<p><img src="/assets/1585641228863.png" alt="1585641228863"></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@HystrixCommand</span>(fallbackMethod = <span class="string">"payment_TimeOutHandler"</span>, commandProperties = &#123;</span><br><span class="line">            <span class="meta">@HystrixProperty</span>(name = <span class="string">"execution.isolation.thread.timeoutInMilliseconds"</span>, value = <span class="string">"3000"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/assets/1585641246257.png" alt="1585641246257"></p>
+<h5 id="主启动类"><a href="#主启动类" class="headerlink" title="主启动类"></a>主启动类</h5><p>@EnableCircuitBreaker或者@EnableHystrix<br>加上@EnableCircuitBreaker注解之后，就可以使用断路器功能，所以SpringCloud内部是如何整合Hystrix的话先从这个注解开始分析。</p>
+<p>注意： 我们自己配置过的热部署方式对java代码的改动明显,但对@HystrixCommand内属性的修改建议重启微服务。</p>
+<h5 id="统一的兜底方法"><a href="#统一的兜底方法" class="headerlink" title="统一的兜底方法"></a>统一的兜底方法</h5><p>feign接口系列：@DefaultProperties(defaultFallback=””)</p>
+<p><img src="/assets/1585811827344.png" alt="1585811695679"></p>
+<p>@DefaultProperties和@HystrixCommand 都需要，当@HystrixCommand 没有指明方法时走@DefaultProperties的方法</p>
+<h5 id="代码解耦"><a href="#代码解耦" class="headerlink" title="代码解耦"></a>代码解耦</h5><p><img src="/assets/1585812504887.png" alt="1585812504887"></p>
+<p>根据cloud-consumer-feign-hystrix-order80已经有的PaymentHystrixService接口,重新新建一个类(PaymentFallbackService)实现接口,统一为接口里面的方法进行异常处理</p>
+<p><img src="/assets/1585812686103.png" alt="1585812686103"></p>
+<p><img src="/assets/1585812549760.png" alt="1585812549760"></p>
+<p><img src="/assets/1585812566529.png" alt="1585812566529"></p>
+<p><img src="/assets/1585812573319.png" alt="1585812573319"></p>
+<h4 id="服务熔断-1"><a href="#服务熔断-1" class="headerlink" title="服务熔断"></a>服务熔断</h4><p><img src="/assets/1585812836944.png" alt="1585812836944"></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@HystrixCommand</span>(fallbackMethod = <span class="string">"paymentCircuitBreaker_fallback"</span>, commandProperties = &#123;</span><br><span class="line">            <span class="comment">// 是否开启熔断</span></span><br><span class="line">       <span class="meta">@HystrixProperty</span>(name = <span class="string">"circuitBreaker.enabled"</span>, value = <span class="string">"true"</span>),</span><br><span class="line">            <span class="comment">// 总次数</span></span><br><span class="line">       <span class="meta">@HystrixProperty</span>(name = <span class="string">"circuitBreaker.requestVolumeThreshold"</span>, value = <span class="string">"10"</span>),</span><br><span class="line">            <span class="comment">// 相隔时间</span></span><br><span class="line">    <span class="meta">@HystrixProperty</span>(name = <span class="string">"circuitBreaker.sleepWindowInMilliseconds"</span>, value = <span class="string">"10000"</span>),</span><br><span class="line">            <span class="comment">// 异常百分比</span></span><br><span class="line">     	<span class="meta">@HystrixProperty</span>(name = <span class="string">"circuitBreaker.errorThresholdPercentage"</span>, value = <span class="string">"6"</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">paymentCircuitBreaker</span><span class="params">(Integer id)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (id &lt; <span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"++++++++++++++id 不能为负数！"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        String uuid = IdUtil.simpleUUID();</span><br><span class="line">        <span class="keyword">return</span> Thread.currentThread().getName() + <span class="string">"\t  调用成功，流水号为："</span> + uuid;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">paymentCircuitBreaker_fallback</span><span class="params">(Integer id)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="string">"id 不能为负数，id 为"</span> + id;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>多次正确,然后慢慢正确,发现刚开始不满足条件,就算是正确的访问也不能进行</p>
+<h5 id="熔断类型"><a href="#熔断类型" class="headerlink" title="熔断类型"></a>熔断类型</h5><h6 id="熔断打开"><a href="#熔断打开" class="headerlink" title="熔断打开"></a>熔断打开</h6><p>请求不再调用当前服务，内部设置一般为MTTR(平均故障处理时间)，当打开时长达到所设时钟则进入半熔断状态</p>
+<h6 id="熔断关闭"><a href="#熔断关闭" class="headerlink" title="熔断关闭"></a>熔断关闭</h6><p>熔断关闭后不对服务进行熔断</p>
+<h6 id="熔断半开"><a href="#熔断半开" class="headerlink" title="熔断半开"></a>熔断半开</h6><p>部分请求根据规则调用当前服务，如果请求成功且符合规则则认为当前服务恢复正常，关闭熔断</p>
+<p><img src="/assets/1585827394266.png" alt="1585827394266"></p>
+<p><img src="/assets/1585827536240.png" alt="1585827536240"></p>
+<h6 id="断路器打开以后"><a href="#断路器打开以后" class="headerlink" title="断路器打开以后"></a>断路器打开以后</h6><p><img src="/assets/1585827592545.png" alt="1585827592545"></p>
+<h2 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h2><p><img src="/assets/1585828001335.png" alt="1585828001335"></p>
+<p>整个流程可以大致归纳为如下几个步骤：</p>
+<p>创建HystrixCommand或则HystrixObservableCommand对象<br>调用HystrixCommand或则HystrixObservableCommand方法执行Command<br>根据依赖调用的结果缓存情况进行相应的处理<br>根据该类依赖请求熔断器的打开状态进行相应的处理<br>根据该类依赖请求的总量进行相应的处理<br>执行对外部依赖的请求逻辑<br>计算统计熔断器数据值<br>调用降级方法或则返回依赖请求的真正结果</p>
+<h2 id="服务监控hystrixDashboard"><a href="#服务监控hystrixDashboard" class="headerlink" title="服务监控hystrixDashboard"></a>服务监控hystrixDashboard</h2><p><img src="/assets/1585828253455.png" alt="1585828253455"></p>
+]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
+      <tags>
+        <tag>SpringCloud</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>生产环境服务器变慢，诊断思路和性能评估</title>
     <url>/2020/03/30/CPU%E5%8D%A0%E7%94%A8%E8%BF%87%E9%AB%98%E5%A4%84%E7%90%86%E6%96%B9%E6%A1%88/</url>
     <content><![CDATA[<h2 id="整机"><a href="#整机" class="headerlink" title="整机"></a>整机</h2><h4 id="TOP命令"><a href="#TOP命令" class="headerlink" title="TOP命令"></a>TOP命令</h4><p><img src="/assets/1585570935841.png" alt="1585570935841"></p>

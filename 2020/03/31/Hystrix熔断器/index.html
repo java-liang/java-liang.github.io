@@ -6,7 +6,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    生产环境服务器变慢，诊断思路和性能评估 |  WKL博客
+    Hystrix熔断器 |  WKL博客
   </title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   
@@ -31,7 +31,7 @@
   <div id="app">
     <main class="content">
       <section class="outer">
-  <article id="post-CPU占用过高处理方案" class="article article-type-post" itemscope
+  <article id="post-Hystrix熔断器" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
   <div class="article-inner">
@@ -39,7 +39,7 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  生产环境服务器变慢，诊断思路和性能评估
+  Hystrix熔断器
 </h1>
   
 
@@ -48,8 +48,8 @@
 
     
     <div class="article-meta">
-      <a href="/2020/03/30/CPU%E5%8D%A0%E7%94%A8%E8%BF%87%E9%AB%98%E5%A4%84%E7%90%86%E6%96%B9%E6%A1%88/" class="article-date">
-  <time datetime="2020-03-30T12:01:19.000Z" itemprop="datePublished">2020-03-30</time>
+      <a href="/2020/03/31/Hystrix%E7%86%94%E6%96%AD%E5%99%A8/" class="article-date">
+  <time datetime="2020-03-31T05:05:38.000Z" itemprop="datePublished">2020-03-31</time>
 </a>
       
   <div class="article-category">
@@ -63,7 +63,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">244字</span>
+            <span class="post-count">867字</span>
         </span>
     </span>
 
@@ -72,7 +72,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> 阅读时长≈</span>
-            <span class="post-count">1分钟</span>
+            <span class="post-count">3分钟</span>
         </span>
     </span>
 </div>
@@ -97,46 +97,47 @@
       
 
       
-      <h2 id="整机"><a href="#整机" class="headerlink" title="整机"></a>整机</h2><h4 id="TOP命令"><a href="#TOP命令" class="headerlink" title="TOP命令"></a>TOP命令</h4><p><img src="/assets/1585570935841.png" alt="1585570935841"></p>
-<p>查看CPU MEN(内存)<br>load average : 3个值相加除以3*100%,大于60%，说明系统负担压力重</p>
-<h4 id="uptime命令"><a href="#uptime命令" class="headerlink" title="uptime命令"></a>uptime命令</h4><p>uptime,系统性能命令的精简版</p>
-<p><img src="/assets/1585571427022.png" alt="1585571427022"></p>
-<h2 id="CPU"><a href="#CPU" class="headerlink" title="CPU"></a>CPU</h2><h4 id="vmstat"><a href="#vmstat" class="headerlink" title="vmstat"></a>vmstat</h4><p><img src="/assets/1585571555511.png" alt="1585571555511"></p>
-<p><img src="/assets/1585572893667.png" alt="1585572893667"></p>
-<h4 id="查看所有CPU核信息"><a href="#查看所有CPU核信息" class="headerlink" title="查看所有CPU核信息"></a>查看所有CPU核信息</h4><p>mpstat -P ALL 2</p>
-<h4 id="每个进程使用cpu的用量分解信息"><a href="#每个进程使用cpu的用量分解信息" class="headerlink" title="每个进程使用cpu的用量分解信息"></a>每个进程使用cpu的用量分解信息</h4><p>pidstat -u 1 -p 进程编号</p>
-<h2 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h2><h4 id="free"><a href="#free" class="headerlink" title="free"></a>free</h4><p><img src="/assets/1585573199274.png" alt="1585573199274"></p>
-<h4 id="查看额外"><a href="#查看额外" class="headerlink" title="查看额外"></a>查看额外</h4><p>pidstat -p 进程号 -r 采样间隔秒数</p>
-<h2 id="硬盘"><a href="#硬盘" class="headerlink" title="硬盘"></a>硬盘</h2><h4 id="df"><a href="#df" class="headerlink" title="df"></a>df</h4><p>查看磁盘剩余空闲数</p>
-<p><img src="/assets/1585573303133.png" alt="1585573303133"></p>
-<h2 id="磁盘IO"><a href="#磁盘IO" class="headerlink" title="磁盘IO"></a>磁盘IO</h2><h4 id="iostat"><a href="#iostat" class="headerlink" title="iostat"></a>iostat</h4><p><img src="/assets/1585573536821.png" alt="1585573536821"></p>
-<p><img src="/assets/1585573541701.png" alt="1585573541701"></p>
-<h4 id="查看额外-1"><a href="#查看额外-1" class="headerlink" title="查看额外"></a>查看额外</h4><p>pidstat -d 采样间隔秒数 -p 进程号</p>
-<h2 id="网络IO"><a href="#网络IO" class="headerlink" title="网络IO"></a>网络IO</h2><h4 id="ifstat"><a href="#ifstat" class="headerlink" title="ifstat"></a>ifstat</h4><p><img src="/assets/1585573939654.png" alt="1585573939654"></p>
-<h2 id="生产环境出现CPU占用过高处理方案"><a href="#生产环境出现CPU占用过高处理方案" class="headerlink" title="生产环境出现CPU占用过高处理方案"></a>生产环境出现CPU占用过高处理方案</h2><ol>
-<li><p>先用top命令找出CPU占比最高的</p>
-<p><img src="/assets/1585575137408.png" alt="1585575137408"></p>
-</li>
-<li><p>ps -ef或者jps进一步定位，得知是一个怎么样的一个后台程序</p>
-</li>
-</ol>
-<p><img src="/assets/1585575198022.png" alt="1585575198022">)<br><img src="/assets/1585575236251.png" alt="1585575236251"></p>
-<ol start="3">
-<li><p>定位到具体线程或者代码</p>
-<p>ps -mp 进程 -o THREAD,tid,time</p>
-<p><img src="/assets/1585575353286.png" alt="1585575353286"><br></p>
-</li>
-</ol>
-<p><img src="/assets/1585575374513.png" alt="1585575374513"></p>
-<ol start="4">
-<li>将需要的线程ID转换为16进制格式(英文小写格式)</li>
-</ol>
-<p><img src="/assets/1585575458761.png" alt="1585575458761"><br></p>
-<p>​    也可用计算器</p>
-<ol start="5">
-<li>jstack 进程ID | grep tid(16进制线程ID小写英文) -A60</li>
-</ol>
-<p><img src="/assets/1585575563391.png" alt="1585575563391"></p>
+      <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><h4 id="分布式系统面临的问题"><a href="#分布式系统面临的问题" class="headerlink" title="分布式系统面临的问题"></a>分布式系统面临的问题</h4><p>复杂分布式体系结构中的应用程序   有数10个依赖关系,每个依赖关系在某些时候将不可避免地失败<br><img src="/assets/1585631282941.png" alt="1585631282941"></p>
+<p><img src="/assets/1585631289628.png" alt="1585631289628"></p>
+<h4 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h4><p><img src="/assets/1585631316660.png" alt="1585631316660"></p>
+<h4 id="能干嘛"><a href="#能干嘛" class="headerlink" title="能干嘛"></a>能干嘛</h4><p>服务降级<br>服务熔断<br>接近实时的监控</p>
+<h4 id="官网"><a href="#官网" class="headerlink" title="官网"></a>官网</h4><p>官网资料：<a href="https://github.com/Netflix/hystrix/wiki" target="_blank" rel="noopener">https://github.com/Netflix/hystrix/wiki</a></p>
+<h2 id="HyStrix重要概念"><a href="#HyStrix重要概念" class="headerlink" title="HyStrix重要概念"></a>HyStrix重要概念</h2><h4 id="服务降级"><a href="#服务降级" class="headerlink" title="服务降级"></a>服务降级</h4><p>服务器忙,请稍后再试,不让客户端等待并立刻返回一个友好提示,fallback</p>
+<p><img src="/assets/1585631492227.png" alt="1585631492227"></p>
+<h4 id="服务熔断"><a href="#服务熔断" class="headerlink" title="服务熔断"></a>服务熔断</h4><p>类比保险丝达到最大服务访问后,直接拒绝访问,拉闸限电,然后调用服务降级的方法并返回友好提示（相当于保险丝）<br></p>
+<p>服务的降级-&gt;进而熔断-&gt;恢复调用链路</p>
+<h4 id="服务限流"><a href="#服务限流" class="headerlink" title="服务限流"></a>服务限流</h4><p>秒杀高并发等操作,严禁一窝蜂的过来拥挤,大家排队,一秒钟N个,有序进行</p>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h4 id="服务降级-1"><a href="#服务降级-1" class="headerlink" title="服务降级"></a>服务降级</h4><h5 id="业务类"><a href="#业务类" class="headerlink" title="业务类"></a>业务类</h5><p>@HystrixCommand注解</p>
+<p>设置自身调用超时时间的峰值,峰值内可以正常运行,  超过了需要有兜底的方法处理,做服务降级fallback</p>
+<p><img src="/assets/1585641228863.png" alt="1585641228863"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@HystrixCommand</span>(fallbackMethod = <span class="string">"payment_TimeOutHandler"</span>, commandProperties = &#123;</span><br><span class="line">            <span class="meta">@HystrixProperty</span>(name = <span class="string">"execution.isolation.thread.timeoutInMilliseconds"</span>, value = <span class="string">"3000"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/assets/1585641246257.png" alt="1585641246257"></p>
+<h5 id="主启动类"><a href="#主启动类" class="headerlink" title="主启动类"></a>主启动类</h5><p>@EnableCircuitBreaker或者@EnableHystrix<br>加上@EnableCircuitBreaker注解之后，就可以使用断路器功能，所以SpringCloud内部是如何整合Hystrix的话先从这个注解开始分析。</p>
+<p>注意： 我们自己配置过的热部署方式对java代码的改动明显,但对@HystrixCommand内属性的修改建议重启微服务。</p>
+<h5 id="统一的兜底方法"><a href="#统一的兜底方法" class="headerlink" title="统一的兜底方法"></a>统一的兜底方法</h5><p>feign接口系列：@DefaultProperties(defaultFallback=””)</p>
+<p><img src="/assets/1585811827344.png" alt="1585811695679"></p>
+<p>@DefaultProperties和@HystrixCommand 都需要，当@HystrixCommand 没有指明方法时走@DefaultProperties的方法</p>
+<h5 id="代码解耦"><a href="#代码解耦" class="headerlink" title="代码解耦"></a>代码解耦</h5><p><img src="/assets/1585812504887.png" alt="1585812504887"></p>
+<p>根据cloud-consumer-feign-hystrix-order80已经有的PaymentHystrixService接口,重新新建一个类(PaymentFallbackService)实现接口,统一为接口里面的方法进行异常处理</p>
+<p><img src="/assets/1585812686103.png" alt="1585812686103"></p>
+<p><img src="/assets/1585812549760.png" alt="1585812549760"></p>
+<p><img src="/assets/1585812566529.png" alt="1585812566529"></p>
+<p><img src="/assets/1585812573319.png" alt="1585812573319"></p>
+<h4 id="服务熔断-1"><a href="#服务熔断-1" class="headerlink" title="服务熔断"></a>服务熔断</h4><p><img src="/assets/1585812836944.png" alt="1585812836944"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@HystrixCommand</span>(fallbackMethod = <span class="string">"paymentCircuitBreaker_fallback"</span>, commandProperties = &#123;</span><br><span class="line">            <span class="comment">// 是否开启熔断</span></span><br><span class="line">       <span class="meta">@HystrixProperty</span>(name = <span class="string">"circuitBreaker.enabled"</span>, value = <span class="string">"true"</span>),</span><br><span class="line">            <span class="comment">// 总次数</span></span><br><span class="line">       <span class="meta">@HystrixProperty</span>(name = <span class="string">"circuitBreaker.requestVolumeThreshold"</span>, value = <span class="string">"10"</span>),</span><br><span class="line">            <span class="comment">// 相隔时间</span></span><br><span class="line">    <span class="meta">@HystrixProperty</span>(name = <span class="string">"circuitBreaker.sleepWindowInMilliseconds"</span>, value = <span class="string">"10000"</span>),</span><br><span class="line">            <span class="comment">// 异常百分比</span></span><br><span class="line">     	<span class="meta">@HystrixProperty</span>(name = <span class="string">"circuitBreaker.errorThresholdPercentage"</span>, value = <span class="string">"6"</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">paymentCircuitBreaker</span><span class="params">(Integer id)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (id &lt; <span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"++++++++++++++id 不能为负数！"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        String uuid = IdUtil.simpleUUID();</span><br><span class="line">        <span class="keyword">return</span> Thread.currentThread().getName() + <span class="string">"\t  调用成功，流水号为："</span> + uuid;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">paymentCircuitBreaker_fallback</span><span class="params">(Integer id)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="string">"id 不能为负数，id 为"</span> + id;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>多次正确,然后慢慢正确,发现刚开始不满足条件,就算是正确的访问也不能进行</p>
+<h5 id="熔断类型"><a href="#熔断类型" class="headerlink" title="熔断类型"></a>熔断类型</h5><h6 id="熔断打开"><a href="#熔断打开" class="headerlink" title="熔断打开"></a>熔断打开</h6><p>请求不再调用当前服务，内部设置一般为MTTR(平均故障处理时间)，当打开时长达到所设时钟则进入半熔断状态</p>
+<h6 id="熔断关闭"><a href="#熔断关闭" class="headerlink" title="熔断关闭"></a>熔断关闭</h6><p>熔断关闭后不对服务进行熔断</p>
+<h6 id="熔断半开"><a href="#熔断半开" class="headerlink" title="熔断半开"></a>熔断半开</h6><p>部分请求根据规则调用当前服务，如果请求成功且符合规则则认为当前服务恢复正常，关闭熔断</p>
+<p><img src="/assets/1585827394266.png" alt="1585827394266"></p>
+<p><img src="/assets/1585827536240.png" alt="1585827536240"></p>
+<h6 id="断路器打开以后"><a href="#断路器打开以后" class="headerlink" title="断路器打开以后"></a>断路器打开以后</h6><p><img src="/assets/1585827592545.png" alt="1585827592545"></p>
+<h2 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h2><p><img src="/assets/1585828001335.png" alt="1585828001335"></p>
+<p>整个流程可以大致归纳为如下几个步骤：</p>
+<p>创建HystrixCommand或则HystrixObservableCommand对象<br>调用HystrixCommand或则HystrixObservableCommand方法执行Command<br>根据依赖调用的结果缓存情况进行相应的处理<br>根据该类依赖请求熔断器的打开状态进行相应的处理<br>根据该类依赖请求的总量进行相应的处理<br>执行对外部依赖的请求逻辑<br>计算统计熔断器数据值<br>调用降级方法或则返回依赖请求的真正结果</p>
+<h2 id="服务监控hystrixDashboard"><a href="#服务监控hystrixDashboard" class="headerlink" title="服务监控hystrixDashboard"></a>服务监控hystrixDashboard</h2><p><img src="/assets/1585828253455.png" alt="1585828253455"></p>
 
       
       <!-- reward -->
@@ -191,14 +192,14 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://java-liang.gitee.io/2020/03/30/CPU%E5%8D%A0%E7%94%A8%E8%BF%87%E9%AB%98%E5%A4%84%E7%90%86%E6%96%B9%E6%A1%88/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://java-liang.gitee.io/2020/03/31/Hystrix%E7%86%94%E6%96%AD%E5%99%A8/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringCloud/" rel="tag">SpringCloud</a></li></ul>
 
 
     </footer>
@@ -209,19 +210,19 @@
   
   <nav class="article-nav">
     
-      <a href="/2020/03/31/Hystrix%E7%86%94%E6%96%AD%E5%99%A8/" class="article-nav-link">
+      <a href="/2020/04/01/Nginx%E7%9B%B8%E5%85%B3/" class="article-nav-link">
         <strong class="article-nav-caption">上一篇</strong>
         <div class="article-nav-title">
           
-            Hystrix熔断器
+            Nginx相关
           
         </div>
       </a>
     
     
-      <a href="/2020/03/29/JVM%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" class="article-nav-link">
+      <a href="/2020/03/30/CPU%E5%8D%A0%E7%94%A8%E8%BF%87%E9%AB%98%E5%A4%84%E7%90%86%E6%96%B9%E6%A1%88/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">JVM垃圾回收算法和垃圾收集器</div>
+        <div class="article-nav-title">生产环境服务器变慢，诊断思路和性能评估</div>
       </a>
     
   </nav>
